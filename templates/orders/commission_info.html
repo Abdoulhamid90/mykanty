@@ -1,0 +1,17 @@
+<div style="background: #FFF9CC; border-left: 4px solid #FF9933; padding: 20px; border-radius: 8px; margin: 20px 0;">
+    <h4 style="color: #FF9933; margin-bottom: 15px;">💰 Détail de la commission</h4>
+    <div style="display: grid; gap: 10px;">
+        <div style="display: flex; justify-content: space-between;">
+            <span>Montant total de la commande :</span>
+            <strong>{{ order.total }} XOF</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; color: #C7511F;">
+            <span>Commission My Kanty ({{ order.commission_rate }}%) :</span>
+            <strong>- {{ order.commission_amount }} XOF</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding-top: 10px; border-top: 2px solid #FF9933; color: #006B3F; font-size: 1.2rem;">
+            <span>Vous recevrez :</span>
+            <strong>{{ order.seller_amount }} XOF</strong>
+        </div>
+    </div>
+</div>

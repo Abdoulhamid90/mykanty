@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Marketplace{% endblock %}</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/static/images/favicon.png">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS Principal -->
+    <link rel="stylesheet" href="/static/css/main.css">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Header / Navigation -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <!-- Logo -->
+                <div class="navbar-brand">
+                    <a href="{% url 'home' %}" class="logo">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>MarketPlace</span>
+                    </a>
+                </div>
+
+                <!-- Barre de recherche -->
+                <div class="navbar-search">
+                    <form action="{% url 'products:search' %}" method="get" class="search-form">
+                        <input 
+                            type="text" 
+                            name="query" 
+                            placeholder="Rechercher des produits..." 
+                            class="search-input"
+                        >
+                        <button type="submit" class="search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Menu principal -->
+                <div class="navbar-menu">
+                    <ul class="nav-links">
+                        <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> Accueil</a></li>
+                        <li><a href="{% url 'products:list' %}"><i class="fas fa-store"></i> Produits</a></li>
+                        
+                        {% if user.is_authenticated %}
+                            <li class="nav-item-dropdown">
+                                <a href="#" class="dropdown-toggle">
+                                    <i class="fas fa-user-circle"></i>
+                                    {{ user.username }}
+                                    <i class="fas fa-chevron-down"></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{% url 'accounts:dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                                    <li><a href="{% url 'accounts:profile' %}"><i class="fas fa-user-edit"></i> Mon Profil</a></li>
+                                    <li><a href="{% url 'orders:my-orders' %}"><i class="fas fa-shopping-cart"></i> Mes Commandes</a></li>
+                                    {% if user.is_seller %}
+                                        <li><a href="{% url 'products:my-products' %}"><i class="fas fa-box"></i> Mes Produits</a></li>
+                                    {% endif %}
+                                    <li class="divider"></li>
+                                    <li>
+                                        <form action="{% url 'accounts:logout' %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="logout-btn">
+                                                <i class="fas fa-sign-out-alt"></i> Déconnexion
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li><a href="{% url 'accounts:login' %}" class="btn-outline"><i class="fas fa-sign-in-alt"></i> Connexion</a></li>
+                            <li><a href="{% url 'accounts:register' %}" class="btn-primary"><i class="fas fa-user-plus"></i> S'inscrire</a></li>
+                        {% endif %}
+
+                        <!-- Panier -->
+                        <li>
+                            <a href="{% url 'orders:cart' %}" class="cart-link">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span class="cart-badge" id="cart-count">0</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Menu mobile toggle -->
+                <div class="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Messages Flash -->
+    {% if messages %}
+        <div class="messages-container">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% elif message.tags == 'warning' %}exclamation-triangle{% else %}info-circle{% endif %}"></i>
+                    {{ message }}
+                    <button class="alert-close">&times;</button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Contenu principal -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>À propos</h3>
+                    <p>Votre marketplace de confiance pour acheter et vendre en toute sécurité.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Liens rapides</h3>
+                    <ul>
+                        <li><a href="{% url 'home' %}">Accueil</a></li>
+                        <li><a href="{% url 'products:list' %}">Tous les produits</a></li>
+                        <li><a href="#">Comment ça marche</a></li>
+                        <li><a href="#">Devenir vendeur</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Centre d'aide</a></li>
+                        <li><a href="#">Contactez-nous</a></li>
+                        <li><a href="#">Politique de retour</a></li>
+                        <li><a href="#">Conditions d'utilisation</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Newsletter</h3>
+                    <p>Inscrivez-vous pour recevoir nos offres</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Votre email" required>
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 MarketPlace. Tous droits réservés.</p>
+                <div class="payment-methods">
+                    <span>Paiement sécurisé par</span>
+                    <img src="/static/images/wave-logo.png" alt="Wave" class="payment-logo">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/static/js/main.js"></script>
+    {% block extra_js %}{% endblock %}
+
+</html>

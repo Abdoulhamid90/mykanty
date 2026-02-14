@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paiement Escrow - My Kanty</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F8F9FA; }
+        .header { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 20px 0; }
+        .container { max-width: 900px; margin: 30px auto; padding: 0 20px; }
+        .card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .card h2 { color: #006B3F; margin-bottom: 20px; border-bottom: 2px solid #FFD700; padding-bottom: 10px; }
+        .escrow-notice { background: linear-gradient(135deg, rgba(255,153,51,0.1), rgba(0,107,63,0.1)); border-left: 4px solid #FF9933; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
+        .payment-instructions { background: #FFF9CC; border-left: 4px solid #FFD700; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .payment-instructions h3 { color: #006B3F; margin-bottom: 15px; }
+        .payment-instructions ol { margin-left: 20px; }
+        .payment-instructions li { margin-bottom: 10px; color: #0F1111; }
+        .info-box { background: #E8F5E9; border-left: 4px solid #006B3F; padding: 15px; border-radius: 8px; margin: 15px 0; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #0F1111; }
+        input, textarea, select { width: 100%; padding: 12px 15px; border: 2px solid #D5D9D9; border-radius: 8px; font-size: 1rem; font-family: 'Inter', sans-serif; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: #FF9933; }
+        .file-upload-wrapper { border: 2px dashed #D5D9D9; padding: 30px; text-align: center; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .file-upload-wrapper:hover { border-color: #FF9933; background: rgba(255,153,51,0.05); }
+        .file-upload-wrapper input[type="file"] { display: none; }
+        .btn-submit { width: 100%; background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 18px; border: none; border-radius: 10px; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: all 0.3s; }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255,153,51,0.5); }
+        .order-summary { background: #F8F9FA; padding: 20px; border-radius: 8px; }
+        .summary-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #D5D9D9; }
+        .summary-row.total { font-size: 1.3rem; font-weight: 700; color: #006B3F; border-bottom: none; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div style="max-width: 900px; margin: 0 auto; padding: 0 20px;">
+            <h1><i class="fas fa-lock"></i> My Kanty - Paiement sécurisé Escrow</h1>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="escrow-notice">
+            <h3>🔐 Votre paiement est 100% protégé</h3>
+            <p><strong>Comment fonctionne notre système Escrow :</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>✅ Vous payez My Kanty (pas directement le vendeur)</li>
+                <li>✅ Votre argent est bloqué en sécurité</li>
+                <li>✅ Le vendeur prépare et livre votre commande</li>
+                <li>✅ Vous confirmez la réception</li>
+                <li>✅ Seulement après, le vendeur est payé</li>
+                <li>✅ En cas de problème, vous êtes remboursé</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2><i class="fas fa-receipt"></i> Récapitulatif de votre commande</h2>
+            <div id="order-recap"></div>
+        </div>
+
+        <div class="card">
+            <h2><i class="fas fa-money-bill-wave"></i> Instructions de paiement</h2>
+            <div id="payment-instructions"></div>
+
+            <form id="payment-form">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label>Référence de transaction *</label>
+                    <input type="text" id="payment_reference" required placeholder="Ex: TRX123456789">
+                    <small style="color: #565959;">Numéro de transaction fourni par votre opérateur</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Preuve de paiement *</label>
+                    <div class="file-upload-wrapper" onclick="document.getElementById('payment_proof').click()">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: #FF9933; margin-bottom: 10px;"></i>
+                        <p><strong>Cliquez pour ajouter votre preuve de paiement</strong></p>
+                        <p style="color: #565959; font-size: 0.9rem;">JPG, PNG, PDF - Max 5MB</p>
+                        <input type="file" id="payment_proof" accept="image/*,application/pdf">
+                    </div>
+                    <div id="file-name" style="margin-top: 10px; color: #006B3F; font-weight: 600;"></div>
+                </div>
+
+                <div class="info-box">
+                    <strong>ℹ️ Que se passe-t-il ensuite ?</strong><br>
+                    1. Notre équipe vérifie votre paiement (généralement sous 2h)<br>
+                    2. Vous recevez une confirmation par email<br>
+                    3. Le vendeur est notifié et prépare votre commande<br>
+                    4. Vous recevez un numéro de suivi
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-check-circle"></i> Confirmer le paiement
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const orderData = JSON.parse(sessionStorage.getItem('checkout_data') || '{}');
+        
+        if (!orderData.customer) {
+            alert('Session expirée. Veuillez recommencer.');
+            window.location.href = '/orders/cart/';
+        }
+
+        function displayRecap() {
+            const { customer, items, subtotal, shipping, total, payment_method } = orderData;
+            
+            let itemsHTML = items.map(item => `
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #D5D9D9;">
+                    <span>${item.quantity}x ${item.name}</span>
+                    <span>${formatPrice(item.price * item.quantity)} XOF</span>
+                </div>
+            `).join('');
+
+            document.getElementById('order-recap').innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <strong>Livraison :</strong><br>
+                    ${customer.name}<br>
+                    ${customer.address}, ${customer.city}<br>
+                    ${customer.phone}
+                </div>
+                <div class="order-summary">
+                    ${itemsHTML}
+                    <div class="summary-row">
+                        <span>Sous-total</span>
+                        <span>${formatPrice(subtotal)} XOF</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Livraison</span>
+                        <span>${formatPrice(shipping)} XOF</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total à payer</span>
+                        <span>${formatPrice(total)} XOF</span>
+                    </div>
+                </div>
+            `;
+
+            displayPaymentInstructions(payment_method, total);
+        }
+
+        function displayPaymentInstructions(method, total) {
+            let instructionsHTML = '';
+            if (method === 'mobile_money') {
+    instructionsHTML = `
+        <div class="payment-instructions">
+            <h3>📱 Paiement par Mobile Money</h3>
+            <p><strong>Montant à payer : ${formatPrice(total)} XOF</strong></p>
+            <ol>
+                <li>Composez le code USSD de votre opérateur Mobile Money</li>
+                <li>Choisissez "Transfert d'argent"</li>
+                <li>Envoyez <strong>${formatPrice(total)} XOF</strong> au numéro suivant :<br>
+                    <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0; border: 2px solid #FF9933;">
+                        <strong style="font-size: 1.5rem; color: #FF9933;">+228 90 12 34 56</strong><br>
+                        <small>Nom: MY KANTY SARL</small>
+                    </div>
+                </li>
+                <li>Confirmez avec votre code PIN</li>
+                <li>Notez la référence de transaction</li>
+                <li>Prenez une capture d'écran</li>
+                <li>Remplissez le formulaire ci-dessous</li>
+            </ol>
+            <div style="background: #E8F5E9; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                <strong>ℹ️ Important :</strong> Vérifiez bien le numéro avant d'envoyer l'argent
+            </div>
+        </div>
+    `;
+} else if (method === 'nita') {
+    instructionsHTML = `
+        <div class="payment-instructions">
+            <h3>🏦 Paiement par Nita</h3>
+            <p><strong>Montant à payer : ${formatPrice(total)} XOF</strong></p>
+            <ol>
+                <li>Rendez-vous dans votre banque ou app bancaire</li>
+                <li>Effectuez un transfert Nita vers :<br>
+                    <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0; border: 2px solid #006B3F;">
+                        <strong>Bénéficiaire :</strong> MY KANTY SARL<br>
+                        <strong>Banque :</strong> Banque Atlantique Togo<br>
+                        <strong>Numéro de compte :</strong> TG053 01234 56789 01234 56<br>
+                        <strong>Montant :</strong> ${formatPrice(total)} XOF
+                    </div>
+                </li>
+                <li>Conservez le reçu</li>
+                <li>Notez la référence</li>
+                <li>Prenez une photo du reçu</li>
+                <li>Remplissez le formulaire ci-dessous</li>
+            </ol>
+        </div>
+    `;
+}
+           else if (method === 'nita') {
+                instructionsHTML = `
+                    <div class="payment-instructions">
+                        <h3>🏦 Paiement par Nita</h3>
+                        <p><strong>Montant à payer : ${formatPrice(total)} XOF</strong></p>
+                        <ol>
+                            <li>Rendez-vous dans votre banque ou app bancaire</li>
+                            <li>Effectuez un transfert Nita vers :<br>
+                                <strong>Bénéficiaire :</strong> MY KANTY SARL<br>
+                                <strong>Compte :</strong> XXXX-XXXX-XXXX<br>
+                                <strong>Montant :</strong> ${formatPrice(total)} XOF
+                            </li>
+                            <li>Conservez le reçu</li>
+                            <li>Notez la référence</li>
+                            <li>Prenez une photo du reçu</li>
+                            <li>Remplissez le formulaire ci-dessous</li>
+                        </ol>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('payment-instructions').innerHTML = instructionsHTML;
+        }
+
+        function formatPrice(price) {
+            return new Intl.NumberFormat('fr-FR').format(price);
+        }
+
+        // Gestion du fichier
+        document.getElementById('payment_proof').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name;
+            if (fileName) {
+                document.getElementById('file-name').innerHTML = `✅ Fichier sélectionné : <strong>${fileName}</strong>`;
+            }
+        });
+
+        // SOUMISSION DU FORMULAIRE (PARTIE CORRIGÉE)
+        document.getElementById('payment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const reference = document.getElementById('payment_reference').value.trim();
+            const proofFile = document.getElementById('payment_proof').files[0];
+            
+            // Validation manuelle
+            if (!reference) {
+                alert('❌ Veuillez entrer la référence de transaction');
+                document.getElementById('payment_reference').focus();
+                return;
+            }
+            
+            if (!proofFile) {
+                alert('❌ Veuillez ajouter une preuve de paiement');
+                return;
+            }
+
+            // Préparer les données
+            const formData = new FormData();
+            formData.append('order_data', JSON.stringify(orderData));
+            formData.append('payment_reference', reference);
+            formData.append('payment_proof', proofFile);
+
+            // Envoyer au serveur
+            fetch('/orders/confirm-payment/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    localStorage.removeItem('cart');
+                    sessionStorage.removeItem('checkout_data');
+                    window.location.href = `/orders/success/${data.order_number}/`;
+                } else {
+                    alert('❌ Erreur : ' + (data.error || 'Erreur inconnue'));
+                }
+            })
+            .catch(err => {
+                alert('❌ Erreur de connexion');
+                console.error(err);
+            });
+        });
+
+        // Initialiser
+        displayRecap();
+    </script>
+</body>
+</html>

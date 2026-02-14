@@ -1,0 +1,137 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Politique de Confidentialité - My Kanty</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F8F9FA; }
+        .header { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 15px 0; }
+        .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: white; text-decoration: none; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; }
+        .nav-links a { color: white; text-decoration: none; padding: 8px 15px; border-radius: 5px; margin-left: 10px; }
+        .legal-hero { background: linear-gradient(135deg, #006B3F, #FF9933); color: white; padding: 50px 0; text-align: center; }
+        .legal-hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; }
+        .legal-content { background: white; padding: 50px; border-radius: 12px; margin: 40px auto; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .legal-content h2 { color: #006B3F; font-size: 1.4rem; margin: 35px 0 15px; border-left: 4px solid #FF9933; padding-left: 15px; }
+        .legal-content p { color: #565959; line-height: 1.8; margin-bottom: 15px; }
+        .legal-content ul { margin-left: 25px; color: #565959; line-height: 1.8; margin-bottom: 15px; }
+        .legal-content ul li { margin-bottom: 8px; }
+        .highlight-box { background: #E8F5E9; border-left: 4px solid #006B3F; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        footer { background: linear-gradient(135deg, #006B3F, #FF9933); color: white; padding: 30px 0; text-align: center; margin-top: 60px; }
+        footer a { color: #FFD700; text-decoration: none; margin: 0 15px; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container" style="max-width: 1200px;">
+            <nav class="navbar">
+                <a href="{% url 'home' %}" class="logo"><i class="fas fa-shopping-bag"></i> My Kanty</a>
+                <div class="nav-links">
+                    <a href="{% url 'home' %}">Accueil</a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'accounts:dashboard' %}">Dashboard</a>
+                    {% else %}
+                    <a href="{% url 'accounts:login' %}">Connexion</a>
+                    {% endif %}
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="legal-hero">
+        <div class="container">
+            <h1><i class="fas fa-shield-alt"></i> Politique de Confidentialité</h1>
+            <p>Dernière mise à jour : Février 2026</p>
+        </div>
+    </div>
+
+    <div class="container" style="max-width: 900px;">
+        <div class="legal-content">
+
+            <div class="highlight-box">
+                <strong><i class="fas fa-lock"></i> Notre engagement :</strong> My Kanty s'engage à protéger votre vie privée. Nous ne vendons jamais vos données personnelles à des tiers.
+            </div>
+
+            <h2>1. Données Collectées</h2>
+            <p>Nous collectons les données suivantes :</p>
+            <ul>
+                <li><strong>Données d'identité :</strong> Nom, prénom, nom d'utilisateur</li>
+                <li><strong>Données de contact :</strong> Adresse email, numéro de téléphone</li>
+                <li><strong>Données de livraison :</strong> Adresse postale, ville, pays</li>
+                <li><strong>Données de transaction :</strong> Historique des commandes et paiements</li>
+                <li><strong>Données de navigation :</strong> Adresse IP, type de navigateur</li>
+            </ul>
+
+            <h2>2. Utilisation des Données</h2>
+            <p>Vos données sont utilisées pour :</p>
+            <ul>
+                <li>Gérer votre compte et vos commandes</li>
+                <li>Vérifier les paiements via notre système Escrow</li>
+                <li>Envoyer des notifications de commande</li>
+                <li>Améliorer nos services</li>
+                <li>Prévenir la fraude</li>
+            </ul>
+
+            <h2>3. Partage des Données</h2>
+            <p>Vos données peuvent être partagées avec :</p>
+            <ul>
+                <li><strong>Vendeurs :</strong> Adresse de livraison uniquement pour traiter votre commande</li>
+                <li><strong>Partenaires de paiement :</strong> Pour vérification des transactions</li>
+                <li><strong>Autorités :</strong> Si requis par la loi</li>
+            </ul>
+            <p>Nous ne vendons JAMAIS vos données à des tiers à des fins commerciales.</p>
+
+            <h2>4. Sécurité des Données</h2>
+            <p>My Kanty met en place les mesures suivantes pour protéger vos données :</p>
+            <ul>
+                <li>Chiffrement des données sensibles</li>
+                <li>Accès limité aux données par notre équipe</li>
+                <li>Mots de passe stockés sous forme hashée</li>
+                <li>Surveillance continue des tentatives d'intrusion</li>
+            </ul>
+
+            <h2>5. Cookies</h2>
+            <p>My Kanty utilise des cookies pour :</p>
+            <ul>
+                <li>Maintenir votre session de connexion</li>
+                <li>Mémoriser votre panier d'achat</li>
+                <li>Analyser l'utilisation du site</li>
+            </ul>
+
+            <h2>6. Vos Droits</h2>
+            <p>Vous avez le droit de :</p>
+            <ul>
+                <li>Accéder à vos données personnelles</li>
+                <li>Corriger des données inexactes</li>
+                <li>Demander la suppression de votre compte</li>
+                <li>Vous opposer au traitement de vos données</li>
+            </ul>
+            <p>Pour exercer ces droits, contactez-nous : <strong>privacy@mykanty.com</strong></p>
+
+            <h2>7. Contact</h2>
+            <p>Pour toute question relative à votre confidentialité :<br>
+            📧 privacy@mykanty.com<br>
+            📞 +228 90 12 34 56<br>
+            📍 MY KANTY SARL, Lomé, Togo</p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container" style="max-width: 1200px;">
+            <p>
+                <a href="{% url 'legal:cgv' %}">CGV</a>
+                <a href="{% url 'legal:privacy' %}">Confidentialité</a>
+                <a href="{% url 'legal:mentions' %}">Mentions Légales</a>
+                <a href="{% url 'legal:escrow-guide' %}">Guide Escrow</a>
+            </p>
+            <p style="margin-top: 15px; opacity: 0.8;">&copy; 2026 My Kanty - Togo 🇹🇬 & Niger 🇳🇪</p>
+        </div>
+    </footer>
+</body>
+</html>

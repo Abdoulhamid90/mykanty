@@ -1,0 +1,179 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commande {{ order.order_number }} - My Kanty</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F8F9FA; }
+        .header { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 20px 0; }
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .card h2 { color: #006B3F; margin-bottom: 20px; border-bottom: 2px solid #FFD700; padding-bottom: 10px; }
+        .status-badge { display: inline-block; padding: 8px 16px; border-radius: 20px; font-weight: 600; }
+        .info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #F8F9FA; }
+        .info-row:last-child { border-bottom: none; }
+        .escrow-timeline { margin: 20px 0; }
+        .timeline-step { display: flex; gap: 15px; margin-bottom: 20px; }
+        .timeline-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .timeline-icon.completed { background: #CCF5E8; color: #006B3F; }
+        .timeline-icon.pending { background: #F8F9FA; color: #D5D9D9; }
+        .timeline-icon.current { background: #FFF9CC; color: #FF9933; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        .btn-back { background: #F8F9FA; color: #0F1111; padding: 12px 25px; border-radius: 8px; text-decoration: none; display: inline-block; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div style="max-width: 1000px; margin: 0 auto; padding: 0 20px;">
+            <h1><i class="fas fa-receipt"></i> Détail de la commande</h1>
+        </div>
+    </div>
+
+    <div class="container">
+        <a href="{% url 'orders:my-orders' %}" class="btn-back" style="margin-bottom: 20px;">
+            <i class="fas fa-arrow-left"></i> Retour à mes commandes
+        </a>
+
+        <!-- Informations générales -->
+        <div class="card">
+            <h2>📦 Commande {{ order.order_number }}</h2>
+            <div class="info-row">
+                <span>Date de commande</span>
+                <strong>{{ order.created_at|date:"d/m/Y à H:i" }}</strong>
+            </div>
+            <div class="info-row">
+                <span>Statut</span>
+                <span class="status-badge" style="background: #CCF5E8; color: #006B3F;">{{ order.get_status_display }}</span>
+            </div>
+            <div class="info-row">
+                <span>Montant total</span>
+                <strong style="color: #006B3F; font-size: 1.2rem;">{{ order.total }} XOF</strong>
+            </div>
+        </div>
+
+        <!-- Timeline Escrow -->
+        <div class="card">
+            <h2>🔐 Suivi Escrow</h2>
+            <div class="escrow-timeline">
+                <div class="timeline-step">
+                    <div class="timeline-icon {% if order.is_payment_verified %}completed{% else %}current{% endif %}">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <strong>Paiement reçu</strong>
+                        <p style="color: #565959; font-size: 0.9rem;">
+                            {% if order.is_payment_verified %}
+                                ✅ Vérifié le {{ order.payment_verified_at|date:"d/m/Y" }}
+                            {% else %}
+                                ⏳ En cours de vérification
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-icon {% if order.status == 'in_preparation' or order.status == 'in_delivery' or order.status == 'delivered' %}completed{% elif order.is_payment_verified %}current{% else %}pending{% endif %}">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <strong>Préparation</strong>
+                        <p style="color: #565959; font-size: 0.9rem;">
+                            {% if order.status == 'in_preparation' or order.status == 'in_delivery' or order.status == 'delivered' %}
+                                ✅ Commande préparée
+                            {% else %}
+                                En attente
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-icon {% if order.status == 'in_delivery' or order.status == 'delivered' %}completed{% elif order.status == 'in_preparation' %}current{% else %}pending{% endif %}">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <strong>Livraison</strong>
+                        <p style="color: #565959; font-size: 0.9rem;">
+                            {% if order.status == 'in_delivery' %}
+                                🚚 En cours de livraison
+                            {% elif order.status == 'delivered' %}
+                                ✅ Livrée
+                            {% else %}
+                                En attente
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-icon {% if order.is_delivery_confirmed %}completed{% elif order.status == 'delivered' %}current{% else %}pending{% endif %}">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <strong>Confirmation de réception</strong>
+                        <p style="color: #565959; font-size: 0.9rem;">
+                            {% if order.is_delivery_confirmed %}
+                                ✅ Confirmée le {{ order.delivery_confirmed_at|date:"d/m/Y" }}
+                            {% elif order.status == 'delivered' %}
+                                ⏳ En attente de votre confirmation
+                            {% else %}
+                                En attente
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-step">
+                    <div class="timeline-icon {% if order.is_payment_released %}completed{% else %}pending{% endif %}">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <strong>Paiement vendeur</strong>
+                        <p style="color: #565959; font-size: 0.9rem;">
+                            {% if order.is_payment_released %}
+                                💰 Libéré le {{ order.payment_released_at|date:"d/m/Y" }}
+                            {% else %}
+                                🔒 Sécurisé en Escrow
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Adresse de livraison -->
+        <div class="card">
+            <h2>📬 Adresse de livraison</h2>
+            <p><strong>{{ order.get_customer_name }}</strong></p>
+            <p>{{ order.shipping_address }}</p>
+            <p>{{ order.shipping_city }}, {{ order.shipping_country }}</p>
+            <p>Tél: {{ order.guest_phone }}</p>
+        </div>
+
+        <!-- Articles -->
+        <div class="card">
+            <h2>📦 Articles commandés</h2>
+            {% for item in order.items.all %}
+            <div style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #F8F9FA;">
+                <div>
+                    <strong>{{ item.product_name }}</strong><br>
+                    <span style="color: #565959;">Quantité: {{ item.quantity }} × {{ item.product_price }} XOF</span>
+                </div>
+                <strong style="color: #006B3F;">{{ item.total_price }} XOF</strong>
+            </div>
+            {% endfor %}
+            
+            <div style="margin-top: 20px; text-align: right;">
+                <div style="color: #565959; margin-bottom: 5px;">Sous-total: {{ order.subtotal }} XOF</div>
+                <div style="color: #565959; margin-bottom: 10px;">Livraison: {{ order.shipping_cost }} XOF</div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: #006B3F;">Total: {{ order.total }} XOF</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

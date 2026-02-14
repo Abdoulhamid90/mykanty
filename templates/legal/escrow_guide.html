@@ -1,0 +1,234 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide Escrow - My Kanty</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F8F9FA; }
+        .header { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 15px 0; }
+        .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: white; text-decoration: none; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; }
+        .nav-links a { color: white; text-decoration: none; padding: 8px 15px; border-radius: 5px; margin-left: 10px; }
+        .legal-hero { background: linear-gradient(135deg, #006B3F, #FF9933); color: white; padding: 50px 0; text-align: center; }
+        .legal-hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; }
+        .steps-grid { display: grid; gap: 20px; margin: 30px 0; }
+        .step-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; gap: 20px; align-items: flex-start; }
+        .step-number { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; flex-shrink: 0; }
+        .step-content h3 { color: #006B3F; margin-bottom: 8px; font-size: 1.1rem; }
+        .step-content p { color: #565959; line-height: 1.6; }
+        .faq-section { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin: 30px 0; }
+        .faq-section h2 { color: #006B3F; margin-bottom: 25px; }
+        .faq-item { border-bottom: 1px solid #D5D9D9; padding: 15px 0; }
+        .faq-item:last-child { border-bottom: none; }
+        .faq-question { font-weight: 600; color: #0F1111; margin-bottom: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .faq-answer { color: #565959; line-height: 1.7; }
+        .highlight-box { background: #FFF9CC; border-left: 4px solid #FF9933; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .highlight-box.green { background: #E8F5E9; border-left-color: #006B3F; }
+        .commission-calc { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin: 30px 0; }
+        .commission-calc h2 { color: #006B3F; margin-bottom: 20px; }
+        .calc-input { display: flex; gap: 15px; margin-bottom: 20px; align-items: center; flex-wrap: wrap; }
+        .calc-input input { padding: 12px; border: 2px solid #D5D9D9; border-radius: 8px; font-size: 1rem; font-family: 'Inter', sans-serif; flex: 1; min-width: 200px; }
+        .calc-btn { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 12px 25px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+        .calc-result { background: #E8F5E9; padding: 20px; border-radius: 8px; display: none; }
+        .calc-result .amount { font-size: 1.5rem; font-weight: 700; color: #006B3F; }
+        footer { background: linear-gradient(135deg, #006B3F, #FF9933); color: white; padding: 30px 0; text-align: center; margin-top: 60px; }
+        footer a { color: #FFD700; text-decoration: none; margin: 0 15px; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container" style="max-width: 1200px;">
+            <nav class="navbar">
+                <a href="{% url 'home' %}" class="logo"><i class="fas fa-shopping-bag"></i> My Kanty</a>
+                <div class="nav-links">
+                    <a href="{% url 'home' %}">Accueil</a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'accounts:dashboard' %}">Dashboard</a>
+                    {% else %}
+                    <a href="{% url 'accounts:login' %}">Connexion</a>
+                    {% endif %}
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="legal-hero">
+        <div class="container">
+            <h1><i class="fas fa-shield-alt"></i> Guide du Système Escrow</h1>
+            <p>Comment fonctionne notre système de paiement sécurisé ?</p>
+        </div>
+    </div>
+
+    <div class="container" style="max-width: 900px; margin-top: 40px;">
+
+        <div class="highlight-box green">
+            <strong><i class="fas fa-info-circle"></i> Qu'est-ce que l'Escrow ?</strong><br>
+            L'Escrow est un système où My Kanty agit comme tiers de confiance. L'argent est conservé en sécurité jusqu'à ce que l'acheteur confirme avoir reçu sa commande. Cela protège à la fois l'acheteur ET le vendeur.
+        </div>
+
+        <h2 style="color: #006B3F; font-size: 1.8rem; margin: 30px 0 20px;">🛒 Pour les Acheteurs</h2>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Passez votre commande</h3>
+                    <p>Ajoutez des produits à votre panier et renseignez vos informations de livraison.</p>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Envoyez le paiement à My Kanty</h3>
+                    <p>Transférez le montant total via Mobile Money ou Nita au numéro/compte de My Kanty. <strong>Ne payez JAMAIS directement au vendeur.</strong></p>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>My Kanty vérifie votre paiement</h3>
+                    <p>Notre équipe vérifie votre preuve de paiement dans les 24-48h et notifie le vendeur.</p>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Recevez votre commande</h3>
+                    <p>Le vendeur prépare et expédie votre commande. Vous serez notifié par email à chaque étape.</p>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <h3>Confirmez la réception</h3>
+                    <p>Une fois le colis reçu, allez dans "Mes Commandes" et cliquez "J'ai reçu ma commande". Cela libère le paiement au vendeur.</p>
+                </div>
+            </div>
+        </div>
+
+        <h2 style="color: #006B3F; font-size: 1.8rem; margin: 40px 0 20px;">🏪 Pour les Vendeurs</h2>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Recevez la notification</h3>
+                    <p>My Kanty vous notifie qu'une commande a été passée et que le paiement est en cours de vérification.</p>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Paiement vérifié → Préparez la commande</h3>
+                    <p>Dès que My Kanty confirme le paiement, préparez la commande. <strong>Ne préparez rien avant cette confirmation.</strong></p>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Expédiez la commande</h3>
+                    <p>Envoyez la commande à l'acheteur dans les délais convenus. Communiquez le numéro de suivi si disponible.</p>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Recevez votre paiement</h3>
+                    <p>Une fois l'acheteur confirme la réception, My Kanty libère le paiement. Vous recevrez <strong>95% du montant</strong> (déduction de la commission 5%).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calculateur de commission -->
+        <div class="commission-calc">
+            <h2><i class="fas fa-calculator"></i> Calculateur de Commission</h2>
+            <p style="color: #565959; margin-bottom: 20px;">Calculez combien vous recevrez après la commission de 5%</p>
+            <div class="calc-input">
+                <input type="number" id="sale-amount" placeholder="Montant de la vente (XOF)" min="0">
+                <button class="calc-btn" onclick="calculateCommission()">
+                    <i class="fas fa-calculator"></i> Calculer
+                </button>
+            </div>
+            <div class="calc-result" id="calc-result">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; text-align: center;">
+                    <div style="background: white; padding: 15px; border-radius: 8px;">
+                        <div style="color: #565959; font-size: 0.9rem; margin-bottom: 5px;">Montant total</div>
+                        <div class="amount" id="total-amount" style="color: #0F1111;"></div>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 8px;">
+                        <div style="color: #565959; font-size: 0.9rem; margin-bottom: 5px;">Commission (5%)</div>
+                        <div class="amount" id="commission-amount" style="color: #C7511F;"></div>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 8px; border: 2px solid #006B3F;">
+                        <div style="color: #565959; font-size: 0.9rem; margin-bottom: 5px;">Vous recevez</div>
+                        <div class="amount" id="seller-amount"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="faq-section">
+            <h2><i class="fas fa-question-circle"></i> Questions Fréquentes</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">Que se passe-t-il si je ne reçois pas ma commande ?</div>
+                <div class="faq-answer">Si vous ne recevez pas votre commande dans les 15 jours, contactez notre support. Votre argent, toujours sécurisé en Escrow, vous sera remboursé intégralement.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Que faire si le produit est différent de la description ?</div>
+                <div class="faq-answer">Ne confirmez pas la réception. Contactez notre support dans les 72h avec des photos du produit reçu. Nous examinerons le litige et vous rembourserons si nécessaire.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Combien de temps My Kanty garde-t-il mon argent ?</div>
+                <div class="faq-answer">Votre argent est gardé jusqu'à confirmation de livraison. Si vous ne confirmez pas dans les 7 jours après livraison indiquée, le paiement est automatiquement libéré au vendeur.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Comment le vendeur reçoit-il son argent ?</div>
+                <div class="faq-answer">Après confirmation de livraison, My Kanty transfère 95% du montant sur le compte Mobile Money ou bancaire du vendeur dans les 24-48h.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Puis-je annuler une commande ?</div>
+                <div class="faq-answer">Vous pouvez annuler dans les 24h si le paiement n'a pas encore été vérifié. Après vérification, l'annulation n'est possible qu'en cas de litige justifié.</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container" style="max-width: 1200px;">
+            <p>
+                <a href="{% url 'legal:cgv' %}">CGV</a>
+                <a href="{% url 'legal:privacy' %}">Confidentialité</a>
+                <a href="{% url 'legal:mentions' %}">Mentions Légales</a>
+                <a href="{% url 'legal:escrow-guide' %}">Guide Escrow</a>
+            </p>
+            <p style="margin-top: 15px; opacity: 0.8;">&copy; 2026 My Kanty - Togo 🇹🇬 & Niger 🇳🇪</p>
+        </div>
+    </footer>
+
+    <script>
+        function calculateCommission() {
+            const amount = parseFloat(document.getElementById('sale-amount').value);
+            if (!amount || amount <= 0) { alert('Veuillez entrer un montant valide'); return; }
+            const commission = amount * 0.05;
+            const sellerAmount = amount - commission;
+            const fmt = n => Math.round(n).toLocaleString('fr-FR') + ' XOF';
+            document.getElementById('total-amount').textContent = fmt(amount);
+            document.getElementById('commission-amount').textContent = '- ' + fmt(commission);
+            document.getElementById('seller-amount').textContent = fmt(sellerAmount);
+            document.getElementById('calc-result').style.display = 'block';
+        }
+        document.getElementById('sale-amount').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') calculateCommission();
+        });
+    </script>
+</body>
+</html>

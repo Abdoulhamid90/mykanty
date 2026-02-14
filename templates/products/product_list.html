@@ -1,0 +1,279 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produits - My Kanty</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F8F9FA; }
+        .header { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 15px 0; position: sticky; top: 0; z-index: 1000; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: white; text-decoration: none; white-space: nowrap; }
+        .search-bar { flex: 1; max-width: 600px; position: relative; }
+        .search-bar input { width: 100%; padding: 10px 50px 10px 20px; border: none; border-radius: 25px; font-size: 1rem; }
+        .search-bar button { position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background: #FF9933; border: none; padding: 7px 18px; border-radius: 20px; color: white; cursor: pointer; }
+        .nav-links { display: flex; gap: 15px; align-items: center; }
+        .nav-links a { color: white; text-decoration: none; padding: 8px 12px; border-radius: 5px; transition: all 0.3s; font-size: 0.9rem; }
+        .nav-links a:hover { background: rgba(255,255,255,0.2); }
+        .mobile-toggle { display: none; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+        .mobile-menu { display: none; position: fixed; top: 0; left: -100%; width: 80%; max-width: 300px; height: 100vh; background: white; z-index: 2000; transition: left 0.3s; overflow-y: auto; }
+        .mobile-menu.active { left: 0; }
+        .mobile-menu-header { background: linear-gradient(135deg, #FF9933, #006B3F); padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .mobile-menu-links a { display: flex; align-items: center; gap: 15px; padding: 15px 20px; color: #0F1111; text-decoration: none; border-bottom: 1px solid #F0F0F0; }
+        .mobile-menu-links a:hover { background: #F8F9FA; }
+        .mobile-menu-links i { width: 25px; color: #FF9933; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1999; }
+        .overlay.active { display: block; }
+        .page-header { background: white; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .page-header h1 { color: #006B3F; }
+        .main-layout { display: grid; grid-template-columns: 280px 1fr; gap: 30px; margin-top: 30px; }
+        .filters-sidebar { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); height: fit-content; position: sticky; top: 80px; }
+        .filters-sidebar h3 { color: #006B3F; margin-bottom: 20px; border-bottom: 2px solid #FFD700; padding-bottom: 10px; }
+        .filter-group { margin-bottom: 25px; }
+        .filter-group h4 { color: #0F1111; margin-bottom: 12px; font-size: 0.95rem; }
+        .filter-group select, .filter-group input { width: 100%; padding: 10px; border: 2px solid #D5D9D9; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.9rem; }
+        .filter-group select:focus, .filter-group input:focus { outline: none; border-color: #FF9933; }
+        .price-range { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn-filter { width: 100%; background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .btn-filter:hover { transform: translateY(-2px); }
+        .btn-reset { width: 100%; background: #F8F9FA; color: #565959; padding: 10px; border: 1px solid #D5D9D9; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 10px; transition: all 0.3s; text-align: center; display: block; text-decoration: none; }
+        .products-section { min-height: 400px; }
+        .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: white; padding: 15px 20px; border-radius: 8px; }
+        .results-count { color: #565959; }
+        .sort-select { padding: 8px 15px; border: 2px solid #D5D9D9; border-radius: 8px; font-family: 'Inter', sans-serif; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        .product-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.08); transition: all 0.3s; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+        .product-image { position: relative; padding-top: 100%; background: #F3F3F3; overflow: hidden; }
+        .product-image img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+        .product-card:hover .product-image img { transform: scale(1.05); }
+        .product-info { padding: 15px; }
+        .product-name { font-weight: 600; color: #0F1111; margin-bottom: 8px; font-size: 0.95rem; }
+        .product-price { font-size: 1.3rem; font-weight: 700; color: #FF9933; margin-bottom: 12px; }
+        .product-seller { font-size: 0.8rem; color: #565959; margin-bottom: 12px; }
+        .btn-add-cart { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 10px; border-radius: 8px; font-weight: 600; width: 100%; border: none; cursor: pointer; transition: all 0.3s; font-size: 0.9rem; }
+        .btn-add-cart:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,153,51,0.4); }
+        .btn-detail { display: block; text-align: center; background: #F8F9FA; color: #006B3F; padding: 8px; border-radius: 8px; text-decoration: none; font-weight: 600; margin-top: 8px; font-size: 0.9rem; transition: all 0.3s; }
+        .btn-detail:hover { background: #006B3F; color: white; }
+        .empty-state { text-align: center; padding: 60px 20px; background: white; border-radius: 12px; grid-column: 1/-1; }
+        .empty-state i { font-size: 4rem; color: #D5D9D9; margin-bottom: 20px; }
+        .cart-badge { position: relative; }
+        .cart-badge span { position: absolute; top: -8px; right: -8px; background: #C7511F; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.7rem; font-weight: 700; min-width: 18px; text-align: center; }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .mobile-toggle { display: block; }
+            .search-bar { display: none; }
+            .main-layout { grid-template-columns: 1fr; }
+            .filters-sidebar { position: static; }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay" id="overlay" onclick="closeMobileMenu()"></div>
+    
+    <div class="mobile-menu" id="mobile-menu">
+        <div class="mobile-menu-header">
+            <span style="color: white; font-weight: 700; font-size: 1.2rem;">My Kanty</span>
+            <button onclick="closeMobileMenu()" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="mobile-menu-links">
+            <a href="{% url 'home' %}"><i class="fas fa-home"></i> Accueil</a>
+            <a href="{% url 'products:product-list' %}"><i class="fas fa-th"></i> Produits</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'accounts:dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                {% if user.is_seller %}
+                <a href="{% url 'orders:seller-orders' %}"><i class="fas fa-store"></i> Mes Ventes</a>
+                {% else %}
+                <a href="{% url 'orders:my-orders' %}"><i class="fas fa-box"></i> Mes Commandes</a>
+                <a href="{% url 'accounts:become-seller' %}"><i class="fas fa-briefcase"></i> Devenir Vendeur</a>
+                {% endif %}
+                <a href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+            {% else %}
+                <a href="{% url 'accounts:register' %}"><i class="fas fa-user-plus"></i> S'inscrire</a>
+                <a href="{% url 'accounts:login' %}"><i class="fas fa-sign-in-alt"></i> Connexion</a>
+            {% endif %}
+            <a href="{% url 'orders:cart' %}" class="cart-badge"><i class="fas fa-shopping-cart"></i> Panier <span id="mobile-cart-count">0</span></a>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <button class="mobile-toggle" onclick="openMobileMenu()"><i class="fas fa-bars"></i></button>
+                <a href="{% url 'home' %}" class="logo"><i class="fas fa-shopping-bag"></i> My Kanty</a>
+                <form method="GET" action="{% url 'products:product-list' %}" class="search-bar">
+                    <input type="text" name="q" value="{{ query }}" placeholder="Rechercher des produits...">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+                <div class="nav-links">
+                    <a href="{% url 'products:product-list' %}"><i class="fas fa-th"></i> Produits</a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'accounts:dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                        {% if user.is_seller %}
+                        <a href="{% url 'orders:seller-orders' %}"><i class="fas fa-store"></i> Mes Ventes</a>
+                        {% else %}
+                        <a href="{% url 'orders:my-orders' %}"><i class="fas fa-box"></i> Commandes</a>
+                        {% endif %}
+                        <a href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+                    {% else %}
+                        <a href="{% url 'accounts:login' %}"><i class="fas fa-sign-in-alt"></i> Connexion</a>
+                    {% endif %}
+                    <a href="{% url 'orders:cart' %}" style="position: relative;">
+                        <i class="fas fa-shopping-cart"></i> Panier
+                        <span id="cart-badge" style="display:none; position:absolute; top:-8px; right:-8px; background:#C7511F; color:white; border-radius:50%; padding:2px 6px; font-size:0.7rem; min-width:18px; text-align:center;">0</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-layout">
+            <!-- Filtres -->
+            <aside class="filters-sidebar">
+                <h3><i class="fas fa-filter"></i> Filtres</h3>
+                <form method="GET" action="{% url 'products:product-list' %}">
+                    {% if query %}
+                    <input type="hidden" name="q" value="{{ query }}">
+                    {% endif %}
+                    
+                    <div class="filter-group">
+                        <h4>Catégorie</h4>
+                        <select name="category">
+                            <option value="">Toutes les catégories</option>
+                            {% for cat in categories %}
+                            <option value="{{ cat.id }}" {% if category_id == cat.id|stringformat:"s" %}selected{% endif %}>
+                                {{ cat.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h4>Prix (XOF)</h4>
+                        <div class="price-range">
+                            <input type="number" name="min_price" value="{{ min_price }}" placeholder="Min">
+                            <input type="number" name="max_price" value="{{ max_price }}" placeholder="Max">
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h4>Trier par</h4>
+                        <select name="sort">
+                            <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Plus récents</option>
+                            <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>Prix croissant</option>
+                            <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Prix décroissant</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn-filter">
+                        <i class="fas fa-search"></i> Appliquer les filtres
+                    </button>
+                    <a href="{% url 'products:product-list' %}" class="btn-reset">
+                        <i class="fas fa-times"></i> Réinitialiser
+                    </a>
+                </form>
+            </aside>
+
+            <!-- Produits -->
+            <div class="products-section">
+                <div class="results-header">
+                    <div class="results-count">
+                        {% if query %}
+                            <strong>{{ total_results }}</strong> résultat(s) pour "<strong>{{ query }}</strong>"
+                        {% else %}
+                            <strong>{{ total_results }}</strong> produit(s) disponible(s)
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="products-grid">
+                    {% for product in products %}
+                    <div class="product-card">
+                        <div class="product-image">
+                            {% if product.main_image %}
+                            <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
+                            {% else %}
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Crect fill='%23D5D9D9' width='300' height='300'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23565959' font-size='16'%3EImage%3C/text%3E%3C/svg%3E" alt="{{ product.name }}">
+                            {% endif %}
+                        </div>
+                        <div class="product-info">
+                            <div class="product-name">{{ product.name|truncatewords:5 }}</div>
+                            <div class="product-price">{{ product.get_price|floatformat:0 }} XOF</div>
+                            <div class="product-seller"><i class="fas fa-store"></i> {{ product.seller.username }}</div>
+                            <button class="btn-add-cart" onclick="addToCart({{ product.id }}, '{{ product.name|escapejs }}', {{ product.get_price }}, '{% if product.main_image %}{{ product.main_image.url }}{% endif %}')">
+                                <i class="fas fa-cart-plus"></i> Ajouter au panier
+                            </button>
+                            <a href="{% url 'products:product-detail' product.id %}" class="btn-detail">
+                                <i class="fas fa-eye"></i> Voir les détails
+                            </a>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <h3>Aucun produit trouvé</h3>
+                        <p style="color: #565959; margin-top: 10px;">
+                            {% if query %}Essayez avec d'autres mots-clés{% else %}Aucun produit disponible pour le moment{% endif %}
+                        </p>
+                        {% if query %}
+                        <a href="{% url 'products:product-list' %}" style="display: inline-block; margin-top: 15px; background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none;">
+                            Voir tous les produits
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer style="background: linear-gradient(135deg, #006B3F, #FF9933); color: white; padding: 30px 0; margin-top: 60px; text-align: center;">
+        <p>&copy; 2026 My Kanty - Togo 🇹🇬 & Niger 🇳🇪 | Paiement sécurisé Escrow</p>
+    </footer>
+
+    <script>
+        function openMobileMenu() {
+            document.getElementById('mobile-menu').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeMobileMenu() {
+            document.getElementById('mobile-menu').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        function addToCart(id, name, price, image) {
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const existing = cart.find(i => i.id === id);
+            if (existing) { existing.quantity += 1; }
+            else { cart.push({ id, name, price, image: image || '', quantity: 1 }); }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            showNotification('✅ ' + name + ' ajouté au panier !');
+            updateBadge();
+        }
+        function showNotification(msg) {
+            const n = document.createElement('div');
+            n.style.cssText = 'position:fixed;top:80px;right:20px;background:linear-gradient(135deg,#FF9933,#006B3F);color:white;padding:15px 25px;border-radius:8px;box-shadow:0 5px 15px rgba(0,0,0,0.3);z-index:10000;font-weight:600;';
+            n.textContent = msg;
+            document.body.appendChild(n);
+            setTimeout(() => n.remove(), 3000);
+        }
+        function updateBadge() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const total = cart.reduce((s, i) => s + i.quantity, 0);
+            const badge = document.getElementById('cart-badge');
+            const mobileBadge = document.getElementById('mobile-cart-count');
+            if (badge) { badge.textContent = total; badge.style.display = total > 0 ? 'inline-block' : 'none'; }
+            if (mobileBadge) { mobileBadge.textContent = total; }
+        }
+        updateBadge();
+    </script>
+{% include 'includes/chatbot.html' %}
+</body>
+</html>

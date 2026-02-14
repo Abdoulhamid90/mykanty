@@ -1,0 +1,210 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conditions Générales de Vente - My Kanty</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F8F9FA; }
+        .header { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 15px 0; }
+        .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: white; text-decoration: none; }
+        .nav-links a { color: white; text-decoration: none; padding: 8px 15px; border-radius: 5px; margin-left: 10px; }
+        .nav-links a:hover { background: rgba(255,255,255,0.2); }
+        .legal-hero { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 50px 0; text-align: center; }
+        .legal-hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; }
+        .legal-hero p { opacity: 0.9; font-size: 1.1rem; }
+        .legal-content { background: white; padding: 50px; border-radius: 12px; margin: 40px auto; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .legal-content h2 { color: #006B3F; font-size: 1.4rem; margin: 35px 0 15px; border-left: 4px solid #FF9933; padding-left: 15px; }
+        .legal-content h3 { color: #0F1111; font-size: 1.1rem; margin: 20px 0 10px; }
+        .legal-content p { color: #565959; line-height: 1.8; margin-bottom: 15px; }
+        .legal-content ul { margin-left: 25px; color: #565959; line-height: 1.8; margin-bottom: 15px; }
+        .legal-content ul li { margin-bottom: 8px; }
+        .highlight-box { background: #FFF9CC; border-left: 4px solid #FF9933; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .highlight-box.green { background: #E8F5E9; border-left-color: #006B3F; }
+        .escrow-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .escrow-table th { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 12px 15px; text-align: left; }
+        .escrow-table td { padding: 12px 15px; border-bottom: 1px solid #D5D9D9; color: #565959; }
+        .escrow-table tr:nth-child(even) { background: #F8F9FA; }
+        .update-date { background: #F8F9FA; padding: 15px 20px; border-radius: 8px; color: #565959; font-size: 0.9rem; margin-top: 30px; }
+        footer { background: linear-gradient(135deg, #006B3F, #FF9933); color: white; padding: 30px 0; text-align: center; margin-top: 60px; }
+        footer a { color: #FFD700; text-decoration: none; margin: 0 15px; }
+        @media (max-width: 768px) {
+            .legal-content { padding: 25px; }
+            .legal-hero h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container" style="max-width: 1200px;">
+            <nav class="navbar">
+                <a href="{% url 'home' %}" class="logo"><i class="fas fa-shopping-bag"></i> My Kanty</a>
+                <div class="nav-links">
+                    <a href="{% url 'home' %}"><i class="fas fa-home"></i> Accueil</a>
+                    <a href="{% url 'products:product-list' %}"><i class="fas fa-th"></i> Produits</a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'accounts:dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                    {% else %}
+                    <a href="{% url 'accounts:login' %}"><i class="fas fa-sign-in-alt"></i> Connexion</a>
+                    {% endif %}
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="legal-hero">
+        <div class="container">
+            <h1><i class="fas fa-file-contract"></i> Conditions Générales de Vente</h1>
+            <p>Dernière mise à jour : Février 2026</p>
+        </div>
+    </div>
+
+    <div class="container" style="max-width: 900px;">
+        <div class="legal-content">
+
+            <div class="highlight-box green">
+                <strong><i class="fas fa-info-circle"></i> Résumé :</strong> En achetant ou vendant sur My Kanty, vous acceptez ces conditions. Notre système Escrow protège à la fois les acheteurs et les vendeurs.
+            </div>
+
+            <h2>Article 1 - Présentation de My Kanty</h2>
+            <p>My Kanty est une plateforme de commerce électronique opérant au Togo et au Niger, permettant à des vendeurs indépendants de proposer leurs produits à des acheteurs.</p>
+            <p><strong>Raison sociale :</strong> MY KANTY SARL<br>
+            <strong>Siège social :</strong> Lomé, Togo<br>
+            <strong>Contact :</strong> contact@mykanty.com</p>
+
+            <h2>Article 2 - Système de Paiement Escrow</h2>
+            <p>My Kanty utilise un système de paiement Escrow (séquestre) pour sécuriser toutes les transactions :</p>
+            
+            <table class="escrow-table">
+                <tr>
+                    <th>Étape</th>
+                    <th>Action</th>
+                    <th>Délai</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>L'acheteur envoie le paiement à My Kanty</td>
+                    <td>Immédiat</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>My Kanty vérifie le paiement</td>
+                    <td>24-48h</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Le vendeur prépare et expédie la commande</td>
+                    <td>1-3 jours</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>L'acheteur confirme la réception</td>
+                    <td>À la livraison</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>My Kanty libère le paiement au vendeur</td>
+                    <td>24-48h après confirmation</td>
+                </tr>
+            </table>
+
+            <div class="highlight-box">
+                <strong>⚠️ Important :</strong> Le vendeur ne reçoit son paiement QUE lorsque l'acheteur confirme avoir reçu sa commande en bon état.
+            </div>
+
+            <h2>Article 3 - Commission My Kanty</h2>
+            <p>My Kanty prélève une commission de <strong>5%</strong> sur chaque transaction réussie.</p>
+            
+            <div class="highlight-box green">
+                <strong>Exemple :</strong> Pour une vente de 10 000 XOF :<br>
+                • Commission My Kanty (5%) : 500 XOF<br>
+                • Montant reçu par le vendeur : <strong>9 500 XOF</strong>
+            </div>
+            
+            <p>Cette commission couvre :</p>
+            <ul>
+                <li>La gestion du système Escrow sécurisé</li>
+                <li>L'infrastructure et la maintenance de la plateforme</li>
+                <li>Le support client acheteurs et vendeurs</li>
+                <li>La gestion des litiges et remboursements</li>
+            </ul>
+
+            <h2>Article 4 - Obligations des Vendeurs</h2>
+            <ul>
+                <li>Obtenir l'approbation de My Kanty avant de publier des produits</li>
+                <li>Fournir des descriptions honnêtes et précises des produits</li>
+                <li>Expédier les commandes dans les délais convenus</li>
+                <li>Communiquer avec les acheteurs en cas de problème</li>
+                <li>Ne pas vendre de produits illégaux ou contrefaits</li>
+                <li>Accepter la commission de 5% sur chaque vente</li>
+            </ul>
+
+            <h2>Article 5 - Obligations des Acheteurs</h2>
+            <ul>
+                <li>Fournir une adresse de livraison exacte et complète</li>
+                <li>Effectuer le paiement dans les 24h après la commande</li>
+                <li>Confirmer la réception de la commande dans les 48h</li>
+                <li>Signaler tout problème dans les 72h après réception</li>
+            </ul>
+
+            <h2>Article 6 - Politique de Remboursement</h2>
+            <p>Un remboursement peut être accordé dans les cas suivants :</p>
+            <ul>
+                <li>Produit non reçu après 15 jours ouvrés</li>
+                <li>Produit non conforme à la description</li>
+                <li>Produit endommagé lors de la livraison</li>
+                <li>Annulation avant expédition (dans les 24h)</li>
+            </ul>
+
+            <h2>Article 7 - Litiges</h2>
+            <p>En cas de litige entre un acheteur et un vendeur, My Kanty intervient comme médiateur. Les fonds restent bloqués en Escrow pendant la durée du litige. My Kanty se réserve le droit de prendre une décision finale après examen des preuves.</p>
+
+            <h2>Article 8 - Moyens de Paiement Acceptés</h2>
+            <ul>
+                <li><strong>Mobile Money :</strong> Tous opérateurs disponibles au Togo et Niger</li>
+                <li><strong>Nita :</strong> Transfert bancaire via le réseau Nita</li>
+            </ul>
+            <p>Les coordonnées de paiement de My Kanty sont :</p>
+            <div class="highlight-box green">
+                <strong>Mobile Money :</strong> +228 90 12 34 56 (MY KANTY SARL)<br>
+                <strong>Nita / Banque :</strong> Banque Atlantique Togo - Compte : TG053 01234 56789 01234 56<br>
+                <strong>Bénéficiaire :</strong> MY KANTY SARL
+            </div>
+
+            <h2>Article 9 - Produits Interdits</h2>
+            <ul>
+                <li>Produits illégaux ou contrefaits</li>
+                <li>Armes, munitions et explosifs</li>
+                <li>Drogues et substances illicites</li>
+                <li>Produits contenant des matières dangereuses</li>
+                <li>Produits portant atteinte aux droits de propriété intellectuelle</li>
+            </ul>
+
+            <h2>Article 10 - Protection des Données</h2>
+            <p>My Kanty s'engage à protéger vos données personnelles conformément aux lois en vigueur au Togo et au Niger. Vos données ne seront jamais vendues à des tiers.</p>
+
+            <div class="update-date">
+                <i class="fas fa-calendar"></i> Ces conditions ont été mises à jour le <strong>11 Février 2026</strong>. En continuant à utiliser My Kanty, vous acceptez ces conditions.
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container" style="max-width: 1200px;">
+            <p>
+                <a href="{% url 'legal:cgv' %}">CGV</a>
+                <a href="{% url 'legal:privacy' %}">Confidentialité</a>
+                <a href="{% url 'legal:mentions' %}">Mentions Légales</a>
+                <a href="{% url 'legal:escrow-guide' %}">Guide Escrow</a>
+            </p>
+            <p style="margin-top: 15px; opacity: 0.8;">&copy; 2026 My Kanty - Togo 🇹🇬 & Niger 🇳🇪</p>
+        </div>
+    </footer>
+</body>
+</html>

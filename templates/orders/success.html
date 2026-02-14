@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Commande confirmée - My Kanty</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #FF9933, #006B3F); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .success-card { background: white; max-width: 600px; padding: 50px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); text-align: center; }
+        .success-icon { font-size: 5rem; color: #006B3F; margin-bottom: 20px; animation: scaleIn 0.5s ease; }
+        @keyframes scaleIn { from { transform: scale(0); } to { transform: scale(1); } }
+        h1 { color: #006B3F; margin-bottom: 15px; }
+        .order-number { background: #FFF9CC; padding: 15px; border-radius: 8px; margin: 20px 0; font-size: 1.2rem; font-weight: 700; }
+        .info-box { background: #E8F5E9; border-left: 4px solid #006B3F; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: left; }
+        .btn-home { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; display: inline-block; margin-top: 20px; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="success-card">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h1>🎉 Commande confirmée !</h1>
+        <p style="color: #565959; margin-bottom: 20px;">Merci pour votre confiance</p>
+        
+        <div class="order-number">
+            Numéro de commande : <strong>{{ order_number }}</strong>
+        </div>
+        
+        <div class="info-box">
+            <strong>📋 Prochaines étapes :</strong><br><br>
+            1. ✅ Nous vérifions votre paiement (sous 2h)<br>
+            2. 📧 Vous recevez une confirmation par email<br>
+            3. 📦 Le vendeur prépare votre commande<br>
+            4. 🚚 Vous recevez votre colis<br>
+            5. ✅ Vous confirmez la réception<br>
+            6. 💰 Le vendeur est payé (système Escrow)
+        </div>
+        
+        <p style="color: #565959; font-size: 0.9rem;">
+            Un email de confirmation a été envoyé à votre adresse
+        </p>
+        
+        <a href="/" class="btn-home">
+            <i class="fas fa-home"></i> Retour à l'accueil
+        </a>
+        
+        {% if user.is_authenticated %}
+        <a href="{% url 'accounts:dashboard' %}" class="btn-home" style="background: #D5D9D9; color: #0F1111; margin-left: 10px;">
+            <i class="fas fa-list"></i> Mes commandes
+        </a>
+        {% endif %}
+    </div>
+</body>
+</html>

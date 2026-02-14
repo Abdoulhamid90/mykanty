@@ -1,0 +1,169 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil - My Kanty</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F8F9FA; }
+        .header { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 20px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 700; color: white; text-decoration: none; }
+        .nav-links { display: flex; gap: 20px; align-items: center; }
+        .nav-links a { color: white; text-decoration: none; padding: 8px 15px; border-radius: 5px; transition: all 0.3s; }
+        .nav-links a:hover { background: rgba(255,255,255,0.2); }
+        .profile-container { margin-top: 30px; }
+        .profile-header { background: white; padding: 30px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); text-align: center; }
+        .profile-header h1 { color: #006B3F; margin-bottom: 10px; }
+        .profile-avatar { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, #FF9933, #006B3F); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: white; margin: 0 auto 20px; }
+        .profile-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
+        .profile-section { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .profile-section h2 { color: #006B3F; margin-bottom: 20px; border-bottom: 2px solid #FFD700; padding-bottom: 10px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #0F1111; }
+        .form-input, .form-textarea { width: 100%; padding: 12px 15px; border: 2px solid #D5D9D9; border-radius: 8px; font-size: 1rem; transition: all 0.3s; font-family: 'Inter', sans-serif; }
+        .form-input:focus, .form-textarea:focus { outline: none; border-color: #FF9933; }
+        .form-file { width: 100%; padding: 10px; border: 2px dashed #D5D9D9; border-radius: 8px; cursor: pointer; }
+        .btn-primary { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 12px 25px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; transition: all 0.3s; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,153,51,0.4); }
+        .btn-secondary { background: #D5D9D9; color: #0F1111; padding: 12px 25px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; text-decoration: none; display: inline-block; }
+        .success-message { background: #CCF5E8; color: #006B3F; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #006B3F; }
+        .error-message { background: #FFE6E6; color: #C7511F; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #C7511F; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="{% url 'home' %}" class="logo">
+                    <i class="fas fa-shopping-bag"></i> My Kanty
+                </a>
+                <div class="nav-links">
+                    <a href="{% url 'home' %}"><i class="fas fa-home"></i> Accueil</a>
+                    <a href="{% url 'accounts:dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                    <a href="{% url 'accounts:profile' %}"><i class="fas fa-user"></i> Profil</a>
+                    <form method="post" action="{% url 'accounts:logout' %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" style="background: rgba(255,255,255,0.2); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">
+                            <i class="fas fa-sign-out-alt"></i> Déconnexion
+                        </button>
+                    </form>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container profile-container">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                {% if user.profile_picture %}
+                <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                {% else %}
+                <i class="fas fa-user"></i>
+                {% endif %}
+            </div>
+            <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+            <p style="color: #565959;">@{{ user.username }}</p>
+            {% if user.is_seller %}
+            <p style="color: #FF9933; font-weight: 600; margin-top: 10px;">
+                <i class="fas fa-store"></i> Vendeur vérifié
+            </p>
+            {% endif %}
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+            <div class="{% if message.tags == 'success' %}success-message{% else %}error-message{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="profile-grid">
+            <div class="profile-section">
+                <h2><i class="fas fa-user-edit"></i> Informations Personnelles</h2>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label>Prénom</label>
+                        {{ form.first_name }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nom</label>
+                        {{ form.last_name }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email</label>
+                        {{ form.email }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Téléphone</label>
+                        {{ form.phone_number }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Adresse</label>
+                        {{ form.address }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Ville</label>
+                        {{ form.city }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Pays</label>
+                        {{ form.country }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Photo de profil</label>
+                        {{ form.profile_picture }}
+                    </div>
+
+                    {% if seller_form %}
+                    <hr style="margin: 30px 0; border: none; border-top: 2px solid #D5D9D9;">
+                    
+                    <h2 style="color: #006B3F; margin-bottom: 20px;">
+                        <i class="fas fa-store"></i> Informations Vendeur
+                    </h2>
+
+                    <div class="form-group">
+                        <label>Nom de l'entreprise</label>
+                        {{ seller_form.business_name }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description de l'entreprise</label>
+                        {{ seller_form.business_description }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Logo de l'entreprise</label>
+                        {{ seller_form.business_logo }}
+                    </div>
+                    {% endif %}
+
+                    <div style="margin-top: 30px; display: flex; gap: 15px;">
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Enregistrer les modifications
+                        </button>
+                        <a href="{% url 'accounts:dashboard' %}" class="btn-secondary">
+                            <i class="fas fa-times"></i> Annuler
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

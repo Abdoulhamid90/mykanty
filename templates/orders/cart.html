@@ -1,0 +1,194 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Panier - My Kanty</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F8F9FA; }
+        .header { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 20px 0; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 700; color: white; text-decoration: none; }
+        .nav-links a { color: white; text-decoration: none; margin-left: 20px; }
+        .cart-container { margin-top: 30px; }
+        .cart-header { background: white; padding: 30px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .cart-header h1 { color: #006B3F; }
+        .cart-content { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+        .cart-items { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .cart-item { display: flex; gap: 20px; padding: 20px; border-bottom: 1px solid #D5D9D9; align-items: center; }
+        .cart-item:last-child { border-bottom: none; }
+        .item-image { width: 100px; height: 100px; object-fit: cover; border-radius: 8px; }
+        .item-details { flex: 1; }
+        .item-name { font-size: 1.1rem; font-weight: 600; color: #0F1111; margin-bottom: 5px; }
+        .item-price { color: #FF9933; font-weight: 700; font-size: 1.2rem; }
+        .quantity-control { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+        .quantity-control button { background: #D5D9D9; border: none; width: 35px; height: 35px; border-radius: 5px; cursor: pointer; font-weight: 700; transition: all 0.3s; }
+        .quantity-control button:hover { background: #FF9933; color: white; }
+        .quantity-control input { width: 60px; text-align: center; border: 2px solid #D5D9D9; border-radius: 5px; padding: 5px; }
+        .remove-btn { background: #FFE6E6; color: #C7511F; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: 600; transition: all 0.3s; }
+        .remove-btn:hover { background: #C7511F; color: white; }
+        .cart-summary { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); height: fit-content; position: sticky; top: 20px; }
+        .cart-summary h2 { color: #006B3F; margin-bottom: 20px; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #D5D9D9; }
+        .summary-row.total { border-bottom: none; font-size: 1.3rem; font-weight: 700; color: #006B3F; }
+        .checkout-btn { width: 100%; background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 15px; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.3s; margin-top: 20px; }
+        .checkout-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,153,51,0.4); }
+        .empty-cart { text-align: center; padding: 60px 20px; }
+        .empty-cart i { font-size: 5rem; color: #D5D9D9; margin-bottom: 20px; }
+        .continue-shopping { background: #D5D9D9; color: #0F1111; padding: 12px 25px; border-radius: 8px; text-decoration: none; display: inline-block; margin-top: 15px; }
+        @media (max-width: 768px) {
+            .cart-content { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="/" class="logo">
+                    <i class="fas fa-shopping-bag"></i> My Kanty
+                </a>
+                <div class="nav-links">
+                    <a href="/"><i class="fas fa-home"></i> Accueil</a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'accounts:dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                    {% endif %}
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container cart-container">
+        <div class="cart-header">
+            <h1><i class="fas fa-shopping-cart"></i> Mon Panier</h1>
+        </div>
+
+        <div id="cart-content">
+            <!-- Contenu géré par JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+
+        function displayCart() {
+            const container = document.getElementById('cart-content');
+            
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="cart-items">
+                        <div class="empty-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            <h2>Votre panier est vide</h2>
+                            <p>Découvrez nos produits et ajoutez-en à votre panier !</p>
+                            <a href="/" class="continue-shopping">
+                                <i class="fas fa-arrow-left"></i> Continuer mes achats
+                            </a>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            let subtotal = 0;
+            let itemsHTML = '';
+
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+
+                itemsHTML += `
+                    <div class="cart-item">
+                        <img src="${item.image}" alt="${item.name}" class="item-image" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27100%27 height=%27100%27%3E%3Crect fill=%27%23ddd%27 width=%27100%27 height=%27100%27/%3E%3Ctext x=%2750%25%27 y=%2750%25%27 text-anchor=%27middle%27 dy=%27.3em%27%3EImage%3C/text%3E%3C/svg%3E'">
+                        <div class="item-details">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-price">${formatPrice(item.price)} XOF</div>
+                            <div class="quantity-control">
+                                <button onclick="updateQuantity(${index}, ${item.quantity - 1})">-</button>
+                                <input type="number" value="${item.quantity}" min="1" onchange="updateQuantity(${index}, this.value)">
+                                <button onclick="updateQuantity(${index}, ${item.quantity + 1})">+</button>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="font-weight: 700; font-size: 1.2rem; color: #006B3F; margin-bottom: 10px;">
+                                ${formatPrice(itemTotal)} XOF
+                            </div>
+                            <button class="remove-btn" onclick="removeItem(${index})">
+                                <i class="fas fa-trash"></i> Retirer
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            const shipping = 2000;
+            const total = subtotal + shipping;
+
+            container.innerHTML = `
+                <div class="cart-content">
+                    <div class="cart-items">
+                        ${itemsHTML}
+                    </div>
+                    <div class="cart-summary">
+                        <h2>Résumé de la commande</h2>
+                        <div class="summary-row">
+                            <span>Sous-total (${cart.length} article${cart.length > 1 ? 's' : ''})</span>
+                            <span>${formatPrice(subtotal)} XOF</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Frais de livraison</span>
+                            <span>${formatPrice(shipping)} XOF</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span>${formatPrice(total)} XOF</span>
+                        </div>
+                        <button class="checkout-btn" onclick="checkout()">
+                            <i class="fas fa-lock"></i> Passer la commande
+                        </button>
+                        <a href="/" class="continue-shopping" style="display: block; text-align: center; margin-top: 15px;">
+                            <i class="fas fa-arrow-left"></i> Continuer mes achats
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function formatPrice(price) {
+            return new Intl.NumberFormat('fr-FR').format(price);
+        }
+
+        function updateQuantity(index, newQuantity) {
+            newQuantity = parseInt(newQuantity);
+            if (newQuantity < 1) {
+                removeItem(index);
+                return;
+            }
+            cart[index].quantity = newQuantity;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            displayCart();
+        }
+
+        function removeItem(index) {
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            displayCart();
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Votre panier est vide !');
+                return;
+            }
+            window.location.href = '/orders/checkout/';
+        }
+
+        displayCart();
+    </script>
+</body>
+</html>
