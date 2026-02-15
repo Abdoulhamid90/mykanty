@@ -161,7 +161,7 @@
                 <div class="step-number">4</div>
                 <div class="step-content">
                     <h3>Recevez votre paiement</h3>
-                    <p>Une fois l'acheteur confirme la réception, My Kanty libère le paiement. Vous recevrez <strong>95% du montant</strong> (déduction de la commission 5%).</p>
+                    <p>Une fois l'acheteur confirme la réception, My Kanty libère le paiement. Vous recevrez <strong>97% du montant</strong> (déduction de la commission 3%).</p>
                 </div>
             </div>
         </div>
@@ -169,7 +169,7 @@
         <!-- CALCULATEUR -->
         <div class="commission-calc">
             <h2><i class="fas fa-calculator"></i> Calculateur de Commission</h2>
-            <p>Calculez combien vous recevrez après la commission de 5%</p>
+            <p>Calculez combien vous recevrez après la commission de 3%</p>
             <div class="calc-input">
                 <input type="number" id="sale-amount" placeholder="Montant de la vente (XOF)" min="0">
                 <button class="calc-btn" onclick="calculateCommission()">
@@ -183,7 +183,7 @@
                         <div class="amount" id="total-amount" style="color:#0F1111;"></div>
                     </div>
                     <div class="calc-box">
-                        <div class="lbl">Commission (5%)</div>
+                        <div class="lbl">Commission (3%)</div>
                         <div class="amount" id="commission-amount" style="color:#C7511F;"></div>
                     </div>
                     <div class="calc-box" style="border:2px solid #006B3F;">
@@ -211,7 +211,7 @@
             </div>
             <div class="faq-item">
                 <div class="faq-question">Comment le vendeur reçoit-il son argent ?</div>
-                <div class="faq-answer">Après confirmation de livraison, My Kanty transfère 95% du montant sur le compte Mobile Money ou bancaire du vendeur dans les 24-48h.</div>
+                <div class="faq-answer">Après confirmation de livraison, My Kanty transfère 97% du montant sur le compte Mobile Money ou bancaire du vendeur dans les 24-48h.</div>
             </div>
             <div class="faq-item">
                 <div class="faq-question">Puis-je annuler une commande ?</div>
@@ -229,7 +229,7 @@
                 <a href="{% url 'legal:mentions' %}">Mentions Légales</a>
                 <a href="{% url 'legal:escrow-guide' %}">Guide Escrow</a>
             </p>
-            <p>&copy; 2026 My Kanty — Fondé par Abdoul-Hamid Mohamed | Togo 🇹🇬 & Niger 🇳🇪</p>
+            <p>&copy; 2026 My Kanty — Fondé par Abdoul-Hamid Mohamed & Co | Togo 🇹🇬 & Niger 🇳🇪</p>
         </div>
     </footer>
 
@@ -237,7 +237,7 @@
         function calculateCommission() {
             const amount = parseFloat(document.getElementById('sale-amount').value);
             if (!amount || amount <= 0) { alert('Veuillez entrer un montant valide'); return; }
-            const commission = amount * 0.05;
+            const commission = amount * 0.03;
             const sellerAmount = amount - commission;
             const fmt = n => Math.round(n).toLocaleString('fr-FR') + ' XOF';
             document.getElementById('total-amount').textContent = fmt(amount);

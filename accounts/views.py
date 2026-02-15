@@ -86,7 +86,7 @@ def dashboard_view(request):
         total_sales = OrderItem.objects.filter(
             seller=user
         ).aggregate(t=Sum('total_price'))['t'] or 0
-        commission = float(total_sales) * 0.05
+        commission = float(total_sales) * 0.03
         net_earnings = float(total_sales) - commission
         context.update({
             'seller_orders': seller_orders,
@@ -205,7 +205,7 @@ def seller_reports_view(request):
         seller=user
     ).aggregate(t=Sum('total_price'))['t'] or 0
 
-    total_commission = float(total_sales) * 0.05
+    total_commission = float(total_sales) * 0.03
     net_earnings = float(total_sales) - total_commission
 
     top_products_qs = OrderItem.objects.filter(
@@ -217,7 +217,7 @@ def seller_reports_view(request):
 
     top_products = []
     for p in top_products_qs:
-        commission = float(p['revenue']) * 0.05
+        commission = float(p['revenue']) * 0.03
         top_products.append({
             'name': p['product_name'],
             'qty': p['qty'],

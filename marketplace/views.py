@@ -6,7 +6,8 @@ from datetime import timedelta
 from products.models import Product, Category
 from orders.models import Order, OrderItem
 from accounts.models import User, SellerRequest
-
+from django.contrib.auth.decorators import login_required
+from django.http import Http404
 
 def home_view(request):
     categories = Category.objects.filter(is_active=True).order_by('name')
@@ -20,8 +21,11 @@ def home_view(request):
     })
 
 
-@staff_member_required
+@login_required
 def admin_dashboard_view(request):
+    if request.user.username != 'admin':
+        from django.http import Http404
+        raise Http404
     """
     Dashboard admin avec statistiques complètes
     """

@@ -382,19 +382,19 @@ p, li, span, label {
 
     <!-- COMMISSION -->
     <div class="commission-box">
-        <h3><i class="fas fa-percentage"></i> Commission transparente — Seulement <strong>5%</strong> par vente</h3>
-        <p style="color:#565959; font-size:0.88rem;">My Kanty prélève 5% pour couvrir la sécurité Escrow, l'infrastructure et le support client. Vous gardez 95% !</p>
+        <h3><i class="fas fa-percentage"></i> Commission transparente — Seulement <strong>3%</strong> par vente</h3>
+        <p style="color:#565959; font-size:0.88rem;">My Kanty prélève 3% pour couvrir la sécurité Escrow, l'infrastructure et le support client. Vous gardez 97% !</p>
         <div class="commission-grid">
             <div class="comm-item">
                 <div class="val orange">10 000 XOF</div>
                 <div class="lbl">Prix de vente</div>
             </div>
             <div class="comm-item">
-                <div class="val red">− 500 XOF</div>
-                <div class="lbl">Commission My Kanty (5%)</div>
+                <div class="val red">− 300 XOF</div>
+                <div class="lbl">Commission My Kanty (3%)</div>
             </div>
             <div class="comm-item">
-                <div class="val green">9 500 XOF</div>
+                <div class="val green">9 700 XOF</div>
                 <div class="lbl">✅ Vous recevez</div>
             </div>
         </div>
@@ -562,7 +562,7 @@ p, li, span, label {
                         <select name="preferred_payment_method" class="form-input" required>
                             <option value="">--- Choisir ---</option>
                             <option value="mobile_money" {% if form.preferred_payment_method.value == 'mobile_money' %}selected{% endif %}>📱 Mobile Money (Mixx / Tmoney)</option>
-                            <option value="nita" {% if form.preferred_payment_method.value == 'nita' %}selected{% endif %}>🏦 Nita (Transfert bancaire)</option>
+                            <option value="nita" {% if form.preferred_payment_method.value == 'nita' %}selected{% endif %}>🏦 Nita (Transfert)</option>
                         </select>
                         {% if form.preferred_payment_method.errors %}<ul class="errorlist">{% for e in form.preferred_payment_method.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
                     </div>
@@ -597,7 +597,7 @@ p, li, span, label {
                         <span>
                             J'ai lu et j'accepte les <a href="{% url 'legal:cgv' %}" target="_blank">Conditions Générales de Vente</a>,
                             la <a href="{% url 'legal:privacy' %}" target="_blank">Politique de Confidentialité</a>
-                            et les <strong>conditions vendeur</strong> ci-dessus, notamment la commission de <strong>5%</strong>
+                            et les <strong>conditions vendeur</strong> ci-dessus, notamment la commission de <strong>3%</strong>
                             et le système de paiement <strong>Escrow</strong>.
                         </span>
                     </label>
@@ -932,10 +932,10 @@ p, li, span, label {
                 <div class="faq-answer">
                     <strong>Au Togo 🇹🇬 :</strong><br>
                     • 📱 Mixx / Tmoney : <strong>+228 72 22 23 72</strong><br>
-                    • 🏦 Nita (dépôt bancaire) : <strong>+228 72 22 23 72</strong><br><br>
+                    • 🏦 Nita (dépôt) : <strong>+228 72 22 23 72</strong><br><br>
                     <strong>Au Niger 🇳🇪 :</strong><br>
                     • 📱 Mobile Money : <strong>+227 92 53 44 35</strong><br>
-                    • 🏦 Nita (dépôt bancaire) : <strong>+227 92 53 44 35</strong>
+                    • 🏦 Nita (dépôt) : <strong>+227 92 53 44 35</strong>
                 </div>
             </div>
 
@@ -956,7 +956,7 @@ p, li, span, label {
                 </div>
                 <div class="faq-answer">
                     Notre équipe est disponible <strong>du Lundi au Samedi de 8h à 18h</strong> :<br><br>
-                    📧 Email : <a href="mailto:contact@mykanty.com">contact@mykanty.com</a><br>
+                    📧 Email : <a href="mailto:Abdoul.mohammed91@gmail.com">contact@mykanty.com</a><br>
                     📱 Togo : <strong>+228 93 33 78 02</strong><br>
                     📱 Niger : <strong>+227 92 53 44 35</strong><br>
                     💬 WhatsApp : <a href="https://wa.me/22893337802" target="_blank"><strong>+228 93 33 78 02</strong></a>
@@ -977,7 +977,7 @@ p, li, span, label {
             <a href="{% url 'legal:mentions' %}">Mentions légales</a>
             <a href="{% url 'legal:escrow-guide' %}">Guide Escrow</a>
         </div>
-        <p>&copy; 2026 My Kanty — Fondé par Abdoul-Hamid Mohamed | Togo 🇹🇬 & Niger 🇳🇪</p>
+        <p>&copy; 2026 My Kanty — Fondé par Abdoul-Hamid Mohamed & Co  | Togo 🇹🇬 & Niger 🇳🇪</p>
     </div>
 </footer>
 
