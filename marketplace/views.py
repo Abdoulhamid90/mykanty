@@ -141,3 +141,119 @@ def admin_dashboard_view(request):
     }
 
     return render(request, 'admin_dashboard.html', context)
+    """
+Ajoutez cette vue dans marketplace/views.py
+Elle relaie les messages au chatbot Claude de façon sécurisée
+"""
+
+import json
+import urllib.request
+import urllib.error
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+from decouple import config
+
+SYSTEM_PROMPT = """Tu es Kanty, l'assistant officiel de My Kanty — la marketplace de confiance au Togo 🇹🇬 et au Niger 🇳🇪.
+
+MY KANTY EN BREF:
+- Marketplace avec système Escrow sécurisé
+- Commission de seulement 3% par vente
+- Paiements: Mixx/Tmoney et Nita
+- 2 pays: Togo et Niger
+- Fondateur: Abdoul-Hamid Mohamed
+
+CONTACTS:
+- Togo: +228 93 33 78 02
+- Niger: +227 92 53 44 35
+- WhatsApp: +228 93 33 78 02
+- Email: contact@mykanty.com
+- Horaires: Lun-Sam 8h-18h
+
+PAIEMENTS:
+- Togo: Mixx/Tmoney → +228 72 22 23 72 | Nita → +228 72 22 23 72
+- Niger: Mobile Money → +227 92 53 44 35 | Nita → +227 92 53 44 35
+
+PAGES IMPORTANTES:
+- Devenir vendeur: /accounts/become-seller/
+- Mes commandes: /orders/my-orders/
+- Guide Escrow: /legal/escrow-guide/
+- CGV: /legal/cgv/
+- Panier: /orders/cart/
+
+ESCROW (système de paiement sécurisé):
+1. Acheteur paie My Kanty
+2. My Kanty vérifie le paiement (24-48h)
+3. Vendeur prépare et expédie
+4. Acheteur confirme réception
+5. My Kanty libère le paiement au vendeur (moins 3%)
+
+STYLE:
+- Réponds en français
+- Sois chaleureux, professionnel et concis
+- Utilise des émojis modérément
+- Réponds en maximum 3-4 phrases courtes
+- Si tu ne sais pas, oriente vers le support: +228 93 33 78 02"""
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def chatbot_api_view(request):
+    """
+    Endpoint sécurisé pour le chatbot Claude.
+    Relaie les messages entre le navigateur et l'API Anthropic.
+    """
+    try:
+        # Parser le corps de la requête
+        body = json.loads(request.body)
+        messages = body.get('messages', [])
+
+        if not messages:
+            return JsonResponse({'error': 'Messages manquants'}, status=400)
+
+        # Limiter l'historique à 10 messages pour économiser les tokens
+        if len(messages) > 10:
+            messages = messages[-10:]
+
+        # Récupérer la clé API depuis les variables d'environnement
+        api_key = config('ANTHROPIC_API_KEY', default='')
+
+        if not api_key:
+            return JsonResponse({
+                'reply': "Le chatbot est temporairement indisponible. Contactez-nous au +228 93 33 78 02 🙏"
+            })
+
+        # Préparer la requête vers l'API Anthropic
+        payload = json.dumps({
+            'model': 'claude-haiku-4-5-20251001',
+            'max_tokens': 500,
+            'system': SYSTEM_PROMPT,
+            'messages': messages
+        }).encode('utf-8')
+
+        req = urllib.request.Request(
+            'https://api.anthropic.com/v1/messages',
+            data=payload,
+            headers={
+                'Content-Type': 'application/json',
+                'x-api-key': api_key,
+                'anthropic-version': '2023-06-01'
+            },
+            method='POST'
+        )
+
+        # Appeler l'API Anthropic
+        with urllib.request.urlopen(req, timeout=30) as response:
+            data = json.loads(response.read().decode('utf-8'))
+            reply = data['content'][0]['text']
+            return JsonResponse({'reply': reply})
+
+    except urllib.error.HTTPError as e:
+        error_body = e.read().decode('utf-8') if e.fp else ''
+        return JsonResponse({
+            'reply': "Désolé, je rencontre un problème. Contactez-nous au +228 93 33 78 02 📞"
+        })
+    except Exception as e:
+        return JsonResponse({
+            'reply': "Une erreur est survenue. Notre équipe est disponible au +228 93 33 78 02 🙏"
+        })

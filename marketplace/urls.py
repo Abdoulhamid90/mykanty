@@ -13,5 +13,7 @@ urlpatterns = [
     path('orders/', include('orders.urls')),
     path('payments/', include('payments.urls')),
     path('legal/', include('legal.urls')),
+    path('chatbot-api/', views.chatbot_api_view, name='chatbot-api'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
   + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
