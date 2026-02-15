@@ -7,52 +7,74 @@
     <title>Guide Escrow - My Kanty</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #F8F9FA; }
-        .header { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 15px 0; }
+        .header { background: linear-gradient(135deg, #FF9933, #006B3F); padding: 15px 0; }
         .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
-        .logo { font-size: 1.5rem; font-weight: 800; color: white; text-decoration: none; }
         .navbar { display: flex; justify-content: space-between; align-items: center; }
-        .nav-links a { color: white; text-decoration: none; padding: 8px 15px; border-radius: 5px; margin-left: 10px; }
-        .legal-hero { background: linear-gradient(135deg, #006B3F, #FF9933); color: white; padding: 50px 0; text-align: center; }
-        .legal-hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; }
-        .steps-grid { display: grid; gap: 20px; margin: 30px 0; }
-        .step-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; gap: 20px; align-items: flex-start; }
-        .step-number { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; flex-shrink: 0; }
-        .step-content h3 { color: #006B3F; margin-bottom: 8px; font-size: 1.1rem; }
-        .step-content p { color: #565959; line-height: 1.6; }
-        .faq-section { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin: 30px 0; }
-        .faq-section h2 { color: #006B3F; margin-bottom: 25px; }
-        .faq-item { border-bottom: 1px solid #D5D9D9; padding: 15px 0; }
-        .faq-item:last-child { border-bottom: none; }
-        .faq-question { font-weight: 600; color: #0F1111; margin-bottom: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .faq-answer { color: #565959; line-height: 1.7; }
-        .highlight-box { background: #FFF9CC; border-left: 4px solid #FF9933; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .logo { font-weight: 800; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo img { height: 40px; }
+        .nav-links a { color: white; text-decoration: none; padding: 8px 14px; border-radius: 5px; margin-left: 5px; font-weight: 500; font-size: 0.9rem; }
+        .nav-links a:hover { background: rgba(255,255,255,0.2); }
+        .legal-hero { background: linear-gradient(135deg, #006B3F, #FF9933); padding: 50px 0; text-align: center; color: white; }
+        .legal-hero h1 { font-size: clamp(1.5rem, 5vw, 2.5rem); font-weight: 800; margin-bottom: 10px; }
+        .legal-hero p { opacity: 0.95; font-size: 1rem; font-weight: 500; }
+        .highlight-box { background: #FFF9CC; border-left: 4px solid #FF9933; padding: 18px 20px; border-radius: 8px; margin: 20px 0; color: #1a1a1a; font-weight: 500; line-height: 1.7; font-size: 0.95rem; }
         .highlight-box.green { background: #E8F5E9; border-left-color: #006B3F; }
-        .commission-calc { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin: 30px 0; }
-        .commission-calc h2 { color: #006B3F; margin-bottom: 20px; }
-        .calc-input { display: flex; gap: 15px; margin-bottom: 20px; align-items: center; flex-wrap: wrap; }
-        .calc-input input { padding: 12px; border: 2px solid #D5D9D9; border-radius: 8px; font-size: 1rem; font-family: 'Inter', sans-serif; flex: 1; min-width: 200px; }
-        .calc-btn { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 12px 25px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
-        .calc-result { background: #E8F5E9; padding: 20px; border-radius: 8px; display: none; }
-        .calc-result .amount { font-size: 1.5rem; font-weight: 700; color: #006B3F; }
-        footer { background: linear-gradient(135deg, #006B3F, #FF9933); color: white; padding: 30px 0; text-align: center; margin-top: 60px; }
-        footer a { color: #FFD700; text-decoration: none; margin: 0 15px; }
+        .highlight-box strong { color: #0F1111; font-weight: 700; }
+        .section-title { color: #006B3F; font-size: 1.6rem; font-weight: 800; margin: 35px 0 20px; }
+        .steps-grid { display: grid; gap: 16px; margin: 20px 0; }
+        .step-card { background: white; padding: 22px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; gap: 18px; align-items: flex-start; }
+        .step-number { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 800; flex-shrink: 0; }
+        .step-content h3 { color: #006B3F; margin-bottom: 7px; font-size: 1.05rem; font-weight: 700; }
+        .step-content p { color: #1a1a1a; line-height: 1.7; font-size: 0.93rem; font-weight: 500; }
+        .step-content strong { color: #0F1111; font-weight: 700; }
+        .faq-section { background: white; padding: 28px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin: 25px 0; }
+        .faq-section h2 { color: #006B3F; margin-bottom: 20px; font-size: 1.3rem; font-weight: 700; }
+        .faq-item { border-bottom: 1px solid #E0E0E0; padding: 15px 0; }
+        .faq-item:last-child { border-bottom: none; }
+        .faq-question { font-weight: 700; color: #0F1111; margin-bottom: 8px; font-size: 0.95rem; }
+        .faq-answer { color: #1a1a1a; line-height: 1.75; font-size: 0.92rem; font-weight: 500; }
+        .commission-calc { background: white; padding: 28px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin: 25px 0; }
+        .commission-calc h2 { color: #006B3F; margin-bottom: 15px; font-size: 1.3rem; }
+        .commission-calc p { color: #1a1a1a; margin-bottom: 18px; font-size: 0.93rem; font-weight: 500; }
+        .calc-input { display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+        .calc-input input { padding: 12px 15px; border: 2px solid #D5D9D9; border-radius: 8px; font-size: 1rem; font-family: 'Inter', sans-serif; flex: 1; min-width: 180px; color: #0F1111; }
+        .calc-input input:focus { outline: none; border-color: #FF9933; }
+        .calc-btn { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 12px 22px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.95rem; white-space: nowrap; }
+        .calc-result { background: #E8F5E9; padding: 20px; border-radius: 10px; display: none; }
+        .calc-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; text-align: center; }
+        .calc-box { background: white; padding: 14px; border-radius: 8px; }
+        .calc-box .lbl { color: #444444; font-size: 0.82rem; margin-bottom: 6px; font-weight: 600; }
+        .calc-box .amount { font-size: 1.2rem; font-weight: 800; }
+        footer { background: linear-gradient(135deg, #1a1a1a, #006B3F); color: white; padding: 30px 0; text-align: center; margin-top: 60px; }
+        footer a { color: #FFD700; text-decoration: none; margin: 0 10px; font-weight: 600; font-size: 0.88rem; }
+        footer p { color: rgba(255,255,255,0.85); font-size: 0.85rem; margin-top: 10px; }
+        @media (max-width: 768px) {
+            .step-card { padding: 16px; gap: 14px; }
+            .step-content h3 { font-size: 0.98rem; }
+            .step-content p { font-size: 0.9rem; color: #0F1111; }
+            .faq-answer { font-size: 0.9rem; color: #0F1111; }
+            .calc-grid { grid-template-columns: 1fr; gap: 10px; }
+            .nav-links { display: none; }
+            .highlight-box { font-size: 0.9rem; color: #0F1111; }
+        }
     </style>
 </head>
 <body>
     <header class="header">
-        <div class="container" style="max-width: 1200px;">
+        <div class="container" style="max-width:1200px;">
             <nav class="navbar">
-                <a href="{% url 'home' %}" class="logo"><i class="fas fa-shopping-bag"></i> My Kanty</a>
+                <a href="{% url 'home' %}" class="logo">
+                    <img src="{% static 'images/logo.png' %}" alt="My Kanty">
+                </a>
                 <div class="nav-links">
-                    <a href="{% url 'home' %}">Accueil</a>
+                    <a href="{% url 'home' %}"><i class="fas fa-home"></i> Accueil</a>
                     {% if user.is_authenticated %}
-                    <a href="{% url 'accounts:dashboard' %}">Dashboard</a>
+                    <a href="{% url 'accounts:dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
                     {% else %}
-                    <a href="{% url 'accounts:login' %}">Connexion</a>
+                    <a href="{% url 'accounts:login' %}"><i class="fas fa-sign-in-alt"></i> Connexion</a>
                     {% endif %}
                 </div>
             </nav>
@@ -66,14 +88,14 @@
         </div>
     </div>
 
-    <div class="container" style="max-width: 900px; margin-top: 40px;">
+    <div class="container" style="max-width:900px; padding-top:30px; padding-bottom:30px;">
 
         <div class="highlight-box green">
             <strong><i class="fas fa-info-circle"></i> Qu'est-ce que l'Escrow ?</strong><br>
             L'Escrow est un système où My Kanty agit comme tiers de confiance. L'argent est conservé en sécurité jusqu'à ce que l'acheteur confirme avoir reçu sa commande. Cela protège à la fois l'acheteur ET le vendeur.
         </div>
 
-        <h2 style="color: #006B3F; font-size: 1.8rem; margin: 30px 0 20px;">🛒 Pour les Acheteurs</h2>
+        <h2 class="section-title">🛒 Pour les Acheteurs</h2>
         <div class="steps-grid">
             <div class="step-card">
                 <div class="step-number">1</div>
@@ -86,7 +108,7 @@
                 <div class="step-number">2</div>
                 <div class="step-content">
                     <h3>Envoyez le paiement à My Kanty</h3>
-                    <p>Transférez le montant total via Mobile Money ou Nita au numéro/compte de My Kanty. <strong>Ne payez JAMAIS directement au vendeur.</strong></p>
+                    <p>Transférez le montant total via Mobile Money ou Nita. <strong>Ne payez JAMAIS directement au vendeur.</strong></p>
                 </div>
             </div>
             <div class="step-card">
@@ -107,12 +129,12 @@
                 <div class="step-number">5</div>
                 <div class="step-content">
                     <h3>Confirmez la réception</h3>
-                    <p>Une fois le colis reçu, allez dans "Mes Commandes" et cliquez "J'ai reçu ma commande". Cela libère le paiement au vendeur.</p>
+                    <p>Une fois le colis reçu, allez dans "Mes Commandes" et cliquez <strong>"J'ai reçu ma commande"</strong>. Cela libère le paiement au vendeur.</p>
                 </div>
             </div>
         </div>
 
-        <h2 style="color: #006B3F; font-size: 1.8rem; margin: 40px 0 20px;">🏪 Pour les Vendeurs</h2>
+        <h2 class="section-title">🏪 Pour les Vendeurs</h2>
         <div class="steps-grid">
             <div class="step-card">
                 <div class="step-number">1</div>
@@ -132,7 +154,7 @@
                 <div class="step-number">3</div>
                 <div class="step-content">
                     <h3>Expédiez la commande</h3>
-                    <p>Envoyez la commande à l'acheteur dans les délais convenus. Communiquez le numéro de suivi si disponible.</p>
+                    <p>Envoyez la commande à l'acheteur dans les délais convenus.</p>
                 </div>
             </div>
             <div class="step-card">
@@ -144,10 +166,10 @@
             </div>
         </div>
 
-        <!-- Calculateur de commission -->
+        <!-- CALCULATEUR -->
         <div class="commission-calc">
             <h2><i class="fas fa-calculator"></i> Calculateur de Commission</h2>
-            <p style="color: #565959; margin-bottom: 20px;">Calculez combien vous recevrez après la commission de 5%</p>
+            <p>Calculez combien vous recevrez après la commission de 5%</p>
             <div class="calc-input">
                 <input type="number" id="sale-amount" placeholder="Montant de la vente (XOF)" min="0">
                 <button class="calc-btn" onclick="calculateCommission()">
@@ -155,18 +177,18 @@
                 </button>
             </div>
             <div class="calc-result" id="calc-result">
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; text-align: center;">
-                    <div style="background: white; padding: 15px; border-radius: 8px;">
-                        <div style="color: #565959; font-size: 0.9rem; margin-bottom: 5px;">Montant total</div>
-                        <div class="amount" id="total-amount" style="color: #0F1111;"></div>
+                <div class="calc-grid">
+                    <div class="calc-box">
+                        <div class="lbl">Montant total</div>
+                        <div class="amount" id="total-amount" style="color:#0F1111;"></div>
                     </div>
-                    <div style="background: white; padding: 15px; border-radius: 8px;">
-                        <div style="color: #565959; font-size: 0.9rem; margin-bottom: 5px;">Commission (5%)</div>
-                        <div class="amount" id="commission-amount" style="color: #C7511F;"></div>
+                    <div class="calc-box">
+                        <div class="lbl">Commission (5%)</div>
+                        <div class="amount" id="commission-amount" style="color:#C7511F;"></div>
                     </div>
-                    <div style="background: white; padding: 15px; border-radius: 8px; border: 2px solid #006B3F;">
-                        <div style="color: #565959; font-size: 0.9rem; margin-bottom: 5px;">Vous recevez</div>
-                        <div class="amount" id="seller-amount"></div>
+                    <div class="calc-box" style="border:2px solid #006B3F;">
+                        <div class="lbl">Vous recevez ✅</div>
+                        <div class="amount" id="seller-amount" style="color:#006B3F;"></div>
                     </div>
                 </div>
             </div>
@@ -175,43 +197,39 @@
         <!-- FAQ -->
         <div class="faq-section">
             <h2><i class="fas fa-question-circle"></i> Questions Fréquentes</h2>
-            
             <div class="faq-item">
                 <div class="faq-question">Que se passe-t-il si je ne reçois pas ma commande ?</div>
                 <div class="faq-answer">Si vous ne recevez pas votre commande dans les 15 jours, contactez notre support. Votre argent, toujours sécurisé en Escrow, vous sera remboursé intégralement.</div>
             </div>
-
             <div class="faq-item">
                 <div class="faq-question">Que faire si le produit est différent de la description ?</div>
                 <div class="faq-answer">Ne confirmez pas la réception. Contactez notre support dans les 72h avec des photos du produit reçu. Nous examinerons le litige et vous rembourserons si nécessaire.</div>
             </div>
-
             <div class="faq-item">
                 <div class="faq-question">Combien de temps My Kanty garde-t-il mon argent ?</div>
                 <div class="faq-answer">Votre argent est gardé jusqu'à confirmation de livraison. Si vous ne confirmez pas dans les 7 jours après livraison indiquée, le paiement est automatiquement libéré au vendeur.</div>
             </div>
-
             <div class="faq-item">
                 <div class="faq-question">Comment le vendeur reçoit-il son argent ?</div>
                 <div class="faq-answer">Après confirmation de livraison, My Kanty transfère 95% du montant sur le compte Mobile Money ou bancaire du vendeur dans les 24-48h.</div>
             </div>
-
             <div class="faq-item">
                 <div class="faq-question">Puis-je annuler une commande ?</div>
                 <div class="faq-answer">Vous pouvez annuler dans les 24h si le paiement n'a pas encore été vérifié. Après vérification, l'annulation n'est possible qu'en cas de litige justifié.</div>
             </div>
         </div>
+
     </div>
 
     <footer>
-        <div class="container" style="max-width: 1200px;">
+        <div class="container" style="max-width:1200px;">
             <p>
                 <a href="{% url 'legal:cgv' %}">CGV</a>
                 <a href="{% url 'legal:privacy' %}">Confidentialité</a>
                 <a href="{% url 'legal:mentions' %}">Mentions Légales</a>
                 <a href="{% url 'legal:escrow-guide' %}">Guide Escrow</a>
             </p>
-            <p style="margin-top: 15px; opacity: 0.8;">&copy; 2026 My Kanty - Togo 🇹🇬 & Niger 🇳🇪</p>
+            <p>&copy; 2026 My Kanty — Fondé par Abdoul-Hamid Mohamed | Togo 🇹🇬 & Niger 🇳🇪</p>
         </div>
     </footer>
 
