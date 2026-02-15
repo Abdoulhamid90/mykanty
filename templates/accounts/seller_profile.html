@@ -1,0 +1,165 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ seller.username }} — Vendeur My Kanty</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F8F9FA; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        /* HEADER */
+        .header { background: linear-gradient(135deg, #FF9933, #006B3F); padding: 14px 0; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; }
+        .logo img { height: 44px; }
+        .nav-links a { color: white; text-decoration: none; padding: 8px 14px; border-radius: 6px; font-size: 0.9rem; font-weight: 500; }
+        .nav-links a:hover { background: rgba(255,255,255,0.2); }
+
+        /* PROFIL VENDEUR */
+        .seller-hero { background: linear-gradient(135deg, #FF9933, #006B3F); padding: 50px 0; color: white; text-align: center; }
+        .seller-avatar { width: 100px; height: 100px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 2.5rem; font-weight: 800; border: 4px solid rgba(255,255,255,0.4); }
+        .seller-name { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; }
+        .seller-badge { background: rgba(255,255,255,0.2); padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; display: inline-block; margin-bottom: 15px; }
+        .seller-stats { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-top: 20px; }
+        .seller-stat { text-align: center; }
+        .seller-stat .val { font-size: 1.8rem; font-weight: 800; color: #FFD700; }
+        .seller-stat .lbl { font-size: 0.82rem; opacity: 0.9; }
+
+        /* PRODUITS */
+        .products-section { padding: 50px 0; }
+        .section-title { font-size: 1.6rem; font-weight: 800; color: #006B3F; margin-bottom: 25px; }
+        .section-title span { color: #FF9933; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+        .product-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.07); transition: all 0.3s; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.12); }
+        .product-img { position: relative; padding-top: 100%; background: #F3F3F3; }
+        .product-img img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        .no-img { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: #D5D9D9; font-size: 2.5rem; }
+        .product-info { padding: 15px; }
+        .product-name { font-weight: 600; color: #0F1111; margin-bottom: 6px; font-size: 0.92rem; }
+        .product-price { font-size: 1.2rem; font-weight: 800; color: #FF9933; margin-bottom: 12px; }
+        .btn-detail { display: block; text-align: center; background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 10px; border-radius: 8px; font-weight: 600; font-size: 0.88rem; transition: all 0.3s; }
+        .btn-detail:hover { transform: translateY(-2px); }
+
+        /* EMPTY */
+        .empty-state { text-align: center; padding: 60px 20px; background: white; border-radius: 12px; }
+        .empty-state i { font-size: 3rem; color: #D5D9D9; margin-bottom: 15px; display: block; }
+
+        /* FOOTER */
+        .footer { background: linear-gradient(135deg, #1a1a1a, #006B3F); color: white; padding: 25px 0; text-align: center; }
+        .footer p { color: rgba(255,255,255,0.7); font-size: 0.85rem; }
+
+        @media (max-width: 768px) {
+            .products-grid { grid-template-columns: repeat(2, 1fr); }
+            .seller-stats { gap: 20px; }
+            .nav-links { display: none; }
+        }
+        @media (max-width: 480px) {
+            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+    <div class="container">
+        <nav class="navbar">
+            <a href="{% url 'home' %}">
+                <img src="{% static 'images/logo.png' %}" alt="My Kanty" style="height:44px;">
+            </a>
+            <div class="nav-links">
+                <a href="{% url 'home' %}"><i class="fas fa-home"></i> Accueil</a>
+                <a href="{% url 'products:product-list' %}"><i class="fas fa-th"></i> Produits</a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'accounts:dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                {% else %}
+                <a href="{% url 'accounts:login' %}"><i class="fas fa-sign-in-alt"></i> Connexion</a>
+                {% endif %}
+            </div>
+        </nav>
+    </div>
+</header>
+
+<!-- PROFIL VENDEUR -->
+<div class="seller-hero">
+    <div class="container">
+        <div class="seller-avatar">
+            {{ seller.username|first|upper }}
+        </div>
+        <div class="seller-name">{{ seller.get_full_name|default:seller.username }}</div>
+        <div class="seller-badge">
+            <i class="fas fa-check-circle"></i> Vendeur vérifié My Kanty
+        </div>
+        <div class="seller-stats">
+            <div class="seller-stat">
+                <div class="val">{{ products.count }}</div>
+                <div class="lbl">Produits en ligne</div>
+            </div>
+            <div class="seller-stat">
+                <div class="val">
+                    {% if seller.date_joined %}
+                        {{ seller.date_joined|date:"Y" }}
+                    {% else %}
+                        2026
+                    {% endif %}
+                </div>
+                <div class="lbl">Membre depuis</div>
+            </div>
+            <div class="seller-stat">
+                <div class="val">✅</div>
+                <div class="lbl">Paiement Escrow</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PRODUITS DU VENDEUR -->
+<section class="products-section">
+    <div class="container">
+        <h2 class="section-title">
+            Produits de <span>{{ seller.get_full_name|default:seller.username }}</span>
+        </h2>
+
+        <div class="products-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <div class="product-img">
+                    {% if product.main_image %}
+                    <img src="{{ product.main_image.url }}" alt="{{ product.name }}" loading="lazy">
+                    {% else %}
+                    <i class="fas fa-image no-img"></i>
+                    {% endif %}
+                </div>
+                <div class="product-info">
+                    <div class="product-name">{{ product.name|truncatewords:6 }}</div>
+                    <div class="product-price">{{ product.price|floatformat:0 }} XOF</div>
+                    <a href="{% url 'products:product-detail' product.id %}" class="btn-detail">
+                        <i class="fas fa-eye"></i> Voir le produit
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state" style="grid-column:1/-1;">
+                <i class="fas fa-box-open"></i>
+                <h3 style="color:#565959;">Aucun produit disponible</h3>
+                <p style="color:#999; margin-top:8px;">Ce vendeur n'a pas encore publié de produits.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2026 My Kanty — Fondé par Abdoul-Hamid Mohamed | Togo 🇹🇬 & Niger 🇳🇪</p>
+    </div>
+</footer>
+
+</body>
+</html>
