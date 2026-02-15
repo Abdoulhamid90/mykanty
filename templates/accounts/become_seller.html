@@ -187,6 +187,121 @@
             .nav-links { display: none; }
             .rating-summary { flex-direction: column; gap: 20px; }
         }
+        /* ── CORRECTIONS LISIBILITÉ MOBILE ── */
+
+/* Tous les textes secondaires plus foncés */
+p, li, span, label {
+    color: #2d2d2d;
+}
+
+/* Descriptions des cartes avantages */
+.benefit-card p {
+    color: #333333;
+    font-size: 0.88rem;
+    font-weight: 500;
+}
+
+/* Textes des étapes */
+.step-card p {
+    color: #333333;
+    font-weight: 500;
+}
+
+/* Textes dans les conditions */
+.cond-article p,
+.cond-article li {
+    color: #2d2d2d;
+    font-size: 0.88rem;
+}
+
+/* Textes avis clients */
+.review-text {
+    color: #2d2d2d;
+    font-size: 0.9rem;
+}
+
+/* Textes FAQ */
+.faq-answer {
+    color: #2d2d2d;
+    font-size: 0.9rem;
+}
+
+/* Labels formulaire */
+.form-group label {
+    color: #1a1a1a;
+    font-weight: 700;
+}
+
+/* Hints formulaire */
+.form-hint {
+    color: #444444;
+    font-weight: 500;
+}
+
+/* Textes satisfaction */
+.satisfaction-label {
+    color: #2d2d2d;
+    font-weight: 600;
+}
+
+/* Accord checkbox */
+.accord-box label span {
+    color: #1a1a1a;
+    font-weight: 500;
+}
+
+/* Sous-titres sections */
+.section-subtitle {
+    color: #333333;
+    font-weight: 500;
+}
+
+/* Textes commission box */
+.commission-box p {
+    color: #333333;
+    font-weight: 500;
+}
+
+/* MOBILE SPÉCIFIQUE */
+@media (max-width: 768px) {
+    p, li, span, label {
+        color: #1a1a1a;
+        font-size: 0.92rem;
+    }
+
+    .benefit-card p,
+    .step-card p,
+    .review-text,
+    .faq-answer,
+    .cond-article p,
+    .cond-article li {
+        color: #1a1a1a;
+        font-size: 0.9rem;
+        line-height: 1.7;
+    }
+
+    .section-subtitle {
+        color: #1a1a1a;
+        font-size: 0.95rem;
+    }
+
+    .form-hint {
+        color: #333333;
+        font-size: 0.82rem;
+    }
+
+    /* Textes sur fond coloré restent blancs */
+    .hero p,
+    .hero h1,
+    .stats-strip p,
+    .stats-strip h3,
+    .stat-item .lbl,
+    .commission-grid .lbl,
+    .chat-header *,
+    .step-num {
+        color: white !important;
+    }
+}
     </style>
 </head>
 <body>
