@@ -7,11 +7,10 @@
     <title>Inscription - My Kanty</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: 'Inter', sans-serif; 
+        body {
+            font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #FF9933 0%, #006B3F 50%, #FFD700 100%);
             min-height: 100vh;
             display: flex;
@@ -20,117 +19,191 @@
             padding: 20px;
         }
         .container { max-width: 500px; width: 100%; }
-        .register-card { 
-            background: white; 
-            border-radius: 15px; 
-            padding: 40px; 
+        .register-card {
+            background: white;
+            border-radius: 15px;
+            padding: 35px 30px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         }
-        .logo { text-align: center; margin-bottom: 30px; }
-        .logo h1 { 
-            font-size: 2.5rem; 
-            font-weight: 800; 
-            background: linear-gradient(135deg, #FF9933, #006B3F);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .logo { text-align: center; margin-bottom: 25px; }
+        .logo img { height: 55px; margin: 0 auto 10px; }
+        .logo p {
+            color: #333333;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-top: 5px;
         }
-        .logo p { color: #565959; margin-top: 5px; }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { 
-            display: block; 
-            margin-bottom: 8px; 
-            font-weight: 600; 
+        .form-group { margin-bottom: 18px; }
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 700;
             color: #0F1111;
+            font-size: 0.95rem;
         }
         input[type="text"],
         input[type="email"],
         input[type="password"],
         input[type="tel"],
         select,
-        textarea { 
-            width: 100%; 
-            padding: 12px 15px; 
-            border: 2px solid #D5D9D9; 
-            border-radius: 8px; 
-            font-size: 1rem; 
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #D5D9D9;
+            border-radius: 8px;
+            font-size: 1rem;
             transition: all 0.3s;
             font-family: 'Inter', sans-serif;
+            color: #0F1111;
+            background: white;
         }
-        input:focus, select:focus, textarea:focus { 
-            outline: none; 
+        input:focus, select:focus, textarea:focus {
+            outline: none;
             border-color: #FF9933;
+            box-shadow: 0 0 0 3px rgba(255,153,51,0.12);
         }
-        .checkbox-wrapper { 
-            display: flex; 
-            align-items: flex-start; 
-            gap: 10px;
-            margin-bottom: 20px;
+
+        /* ── CHECKBOX VENDEUR ── */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 22px;
+            background: #FFF9F0;
+            padding: 14px 16px;
+            border-radius: 10px;
+            border: 2px solid rgba(255,153,51,0.3);
         }
-        input[type="checkbox"] { 
-            width: 20px; 
-            height: 20px; 
-            margin-top: 3px;
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+            accent-color: #006B3F;
+            cursor: pointer;
         }
-        .btn-primary { 
-            width: 100%; 
+        .checkbox-wrapper label {
+            margin: 0;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #0F1111 !important;
+            cursor: pointer;
+            line-height: 1.4;
+        }
+
+        /* ── BOUTON ── */
+        .btn-primary {
+            width: 100%;
             background: linear-gradient(135deg, #FF9933, #006B3F);
-            color: white; 
-            padding: 15px; 
-            border: none; 
-            border-radius: 8px; 
-            font-size: 1.1rem; 
-            font-weight: 700; 
-            cursor: pointer; 
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-        .btn-primary:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 10px 30px rgba(255, 153, 51, 0.4);
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255,153,51,0.4);
         }
-        .divider { 
-            text-align: center; 
-            margin: 25px 0; 
-            color: #565959;
+
+        /* ── DIVIDER ── */
+        .divider {
+            text-align: center;
+            margin: 22px 0;
+            color: #555555;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        .login-link { 
-            text-align: center; 
-            margin-top: 20px;
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #D5D9D9;
         }
-        .login-link a { 
-            color: #006B3F; 
-            font-weight: 600; 
+
+        /* ── LIEN CONNEXION ── */
+        .login-link {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.95rem;
+            color: #333333;
+            font-weight: 500;
+        }
+        .login-link a {
+            color: #006B3F;
+            font-weight: 700;
             text-decoration: none;
+            border-bottom: 2px solid #006B3F;
+            padding-bottom: 1px;
         }
-        .error-list { 
-            background: #ffe6e6; 
-            border-left: 4px solid #C7511F; 
-            padding: 15px; 
-            margin-bottom: 20px; 
+        .login-link a:hover { color: #FF9933; border-color: #FF9933; }
+
+        /* ── ERREURS ── */
+        .error-list {
+            background: #ffe6e6;
+            border-left: 4px solid #C7511F;
+            padding: 15px;
+            margin-bottom: 20px;
             border-radius: 5px;
         }
-        .error-list ul {
-            margin: 0;
-            padding-left: 20px;
-        }
-        .error-list li { 
-            color: #C7511F;
-        }
+        .error-list ul { margin: 0; padding-left: 20px; }
+        .error-list li { color: #C7511F; font-weight: 500; }
+
+        /* ── HELPTEXT ── */
         .helptext {
-            font-size: 0.85rem;
-            color: #565959;
+            font-size: 0.82rem;
+            color: #444444;
             margin-top: 5px;
             display: block;
+            font-weight: 500;
+        }
+
+        /* ── RESPONSIVE MOBILE ── */
+        @media (max-width: 480px) {
+            body { padding: 15px; }
+            .register-card { padding: 25px 18px; }
+            .logo img { height: 48px; }
+            .logo p { font-size: 0.95rem; color: #222222; }
+            .form-group label { font-size: 0.92rem; color: #0F1111; }
+            input[type="text"],
+            input[type="email"],
+            input[type="password"],
+            input[type="tel"],
+            select { font-size: 1rem; padding: 13px 14px; }
+            .checkbox-wrapper label {
+                font-size: 0.92rem;
+                color: #0F1111 !important;
+            }
+            .login-link {
+                font-size: 0.92rem;
+                color: #222222 !important;
+            }
+            .divider { color: #444444; }
+            .helptext { color: #333333; font-size: 0.82rem; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="register-card">
+
+            <!-- LOGO -->
             <div class="logo">
-                <h1><i class="fas fa-shopping-bag"></i> My Kanty</h1>
+                <img src="{% static 'images/logo.png' %}" alt="My Kanty">
                 <p>Créez votre compte gratuitement</p>
             </div>
 
+            <!-- ERREURS -->
             {% if form.errors %}
             <div class="error-list">
                 <strong>⚠️ Erreurs dans le formulaire :</strong>
@@ -144,13 +217,22 @@
             </div>
             {% endif %}
 
+            <!-- MESSAGES -->
+            {% if messages %}
+            {% for message in messages %}
+            <div style="background:#E8F5E9; border-left:4px solid #006B3F; padding:12px 15px; border-radius:6px; margin-bottom:15px; color:#006B3F; font-weight:600;">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+
             <form method="post">
                 {% csrf_token %}
-                
+
                 {% for field in form %}
                     {% if field.name != 'is_seller' %}
                     <div class="form-group">
-                        <label>{{ field.label }} {% if field.field.required %}*{% endif %}</label>
+                        <label>{{ field.label }} {% if field.field.required %}<span style="color:#C7511F;">*</span>{% endif %}</label>
                         {{ field }}
                         {% if field.help_text %}
                             <span class="helptext">{{ field.help_text|safe }}</span>
@@ -159,10 +241,11 @@
                     {% endif %}
                 {% endfor %}
 
+                <!-- CHECKBOX VENDEUR -->
                 <div class="checkbox-wrapper">
                     {{ form.is_seller }}
-                    <label for="{{ form.is_seller.id_for_label }}" style="margin: 0; font-weight: 500;">
-                        Je souhaite vendre sur My Kanty 🏪
+                    <label for="{{ form.is_seller.id_for_label }}">
+                        🏪 Je souhaite vendre sur My Kanty
                     </label>
                 </div>
 
@@ -171,11 +254,13 @@
                 </button>
             </form>
 
-            <div class="divider">───── OU ─────</div>
+            <div class="divider">OU</div>
 
             <div class="login-link">
-                Vous avez déjà un compte ? <a href="{% url 'accounts:login' %}">Connectez-vous</a>
+                Vous avez déjà un compte ?
+                <a href="{% url 'accounts:login' %}">Connectez-vous</a>
             </div>
+
         </div>
     </div>
 </body>
