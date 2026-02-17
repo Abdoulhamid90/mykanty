@@ -1,5 +1,5 @@
 <!-- ═══════════════════════════════════════════════
-     CHATBOT MY KANTY — VERSION SÉCURISÉE
+     CHATBOT MY KANTY — VERSION CORRIGÉE CSRF
      Copiez dans : templates/includes/chatbot.html
      ═══════════════════════════════════════════════ -->
 {% load static %}
@@ -201,7 +201,6 @@
 
 <!-- FENÊTRE CHAT -->
 <div id="chat-window">
-    <!-- Header -->
     <div class="chat-header">
         <div class="chat-avatar">🤖</div>
         <div class="chat-header-info">
@@ -214,10 +213,8 @@
         </div>
     </div>
 
-    <!-- Messages -->
     <div class="chat-messages" id="chat-messages"></div>
 
-    <!-- Suggestions rapides -->
     <div class="chat-suggestions" id="chat-suggestions">
         <button class="suggestion-btn" onclick="sendSuggestion('Comment fonctionne l\'Escrow ?')">🔐 Escrow</button>
         <button class="suggestion-btn" onclick="sendSuggestion('Comment devenir vendeur ?')">🏪 Vendeur</button>
@@ -226,7 +223,6 @@
         <button class="suggestion-btn" onclick="sendSuggestion('Comment vous contacter ?')">📞 Contact</button>
     </div>
 
-    <!-- Input -->
     <div class="chat-input-area">
         <input type="text" id="chat-input" placeholder="Posez votre question..." maxlength="500"
                onkeypress="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();sendMessage();}">
@@ -239,7 +235,6 @@ let chatOpen = false;
 let conversationHistory = [];
 let notifShown = false;
 
-// Message de bienvenue
 const WELCOME_MSG = `Bonjour ! 👋 Je suis **Kanty**, votre assistant My Kanty.
 
 Je peux vous aider sur :
@@ -251,10 +246,8 @@ Je peux vous aider sur :
 
 Comment puis-je vous aider ?`;
 
-// Initialisation
 document.addEventListener('DOMContentLoaded', function() {
     appendMessage('bot', WELCOME_MSG);
-    // Notification après 3 secondes
     setTimeout(function() {
         if (!chatOpen && !notifShown) {
             document.getElementById('chat-notif').style.display = 'flex';
@@ -349,12 +342,11 @@ async function sendMessage() {
     showTyping(true);
 
     try {
-        // Appel à l'endpoint Django sécurisé
+        // Appel à l'endpoint Django (SANS CSRF token)
         const response = await fetch('/chatbot-api/', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 messages: conversationHistory
@@ -366,7 +358,6 @@ async function sendMessage() {
 
         conversationHistory.push({ role: 'assistant', content: reply });
 
-        // Limiter l'historique
         if (conversationHistory.length > 20) {
             conversationHistory = conversationHistory.slice(-20);
         }
@@ -375,18 +366,12 @@ async function sendMessage() {
         appendMessage('bot', reply);
 
     } catch (error) {
+        console.error('Chatbot error:', error);
         showTyping(false);
         appendMessage('bot', '❌ Erreur de connexion. Contactez-nous au **+228 93 33 78 02** 📞');
     }
 
     document.getElementById('chat-send').disabled = false;
     document.getElementById('chat-input').focus();
-}
-
-function getCookie(name) {
-    let value = '; ' + document.cookie;
-    let parts = value.split('; ' + name + '=');
-    if (parts.length === 2) return parts.pop().split(';').shift();
-    return '';
 }
 </script>

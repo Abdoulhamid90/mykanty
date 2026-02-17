@@ -151,7 +151,6 @@ import urllib.request
 import urllib.error
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_http_methods
 from decouple import config
 
 SYSTEM_PROMPT = """Tu es Kanty, l'assistant officiel de My Kanty — la marketplace de confiance au Togo 🇹🇬 et au Niger 🇳🇪.
@@ -196,13 +195,16 @@ STYLE:
 - Si tu ne sais pas, oriente vers le support: +228 93 33 78 02"""
 
 
-@require_http_methods(["POST"])
 @csrf_exempt
 def chatbot_api_view(request):
     """
     Endpoint sécurisé pour le chatbot Claude.
-    Relaie les messages entre le navigateur et l'API Anthropic.
+    Exempt de CSRF car appelé depuis le frontend.
     """
+    # Vérifier que c'est bien une requête POST
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Méthode non autorisée'}, status=405)
+
     try:
         # Parser le corps de la requête
         body = json.loads(request.body)
@@ -250,11 +252,16 @@ def chatbot_api_view(request):
 
     except urllib.error.HTTPError as e:
         error_body = e.read().decode('utf-8') if e.fp else ''
-        print(f"CHATBOT ERROR: {e.code} - {error_body}")
+        print(f"❌ CHATBOT API ERROR: {e.code} - {error_body}")
         return JsonResponse({
-            'reply': "Désolé, je rencontre un problème. Contactez-nous au +228 93 33 78 02 📞"
+            'reply': "Désolé, je rencontre un problème technique. Contactez-nous au +228 93 33 78 02 📞"
+        })
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'reply': "Format de message invalide. Contactez-nous au +228 93 33 78 02 📞"
         })
     except Exception as e:
+        print(f"❌ CHATBOT ERROR: {str(e)}")
         return JsonResponse({
             'reply': "Une erreur est survenue. Notre équipe est disponible au +228 93 33 78 02 🙏"
         })
