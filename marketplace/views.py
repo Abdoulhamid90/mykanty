@@ -196,8 +196,8 @@ STYLE:
 - Si tu ne sais pas, oriente vers le support: +228 93 33 78 02"""
 
 
-@csrf_exempt
 @require_http_methods(["POST"])
+@csrf_exempt
 def chatbot_api_view(request):
     """
     Endpoint sécurisé pour le chatbot Claude.
@@ -250,6 +250,7 @@ def chatbot_api_view(request):
 
     except urllib.error.HTTPError as e:
         error_body = e.read().decode('utf-8') if e.fp else ''
+        print(f"CHATBOT ERROR: {e.code} - {error_body}")
         return JsonResponse({
             'reply': "Désolé, je rencontre un problème. Contactez-nous au +228 93 33 78 02 📞"
         })
