@@ -1,0 +1,51 @@
+name,description,price,category,stock,vendor_username
+"Samsung Galaxy A14 128GB","Smartphone Samsung Galaxy A14 - Écran 6.6 pouces Full HD+ - 128GB de stockage - Appareil photo 50MP - Batterie 5000mAh - Double SIM - Garantie 1 an - Livraison Lomé et Niamey",185000,Téléphonie,25,admin
+"iPhone 13 Pro 256GB Reconditionné","iPhone 13 Pro reconditionné Grade A - État excellent - 256GB - Triple caméra 12MP - Écran Super Retina XDR - Garantie 6 mois - Testé et certifié",550000,Téléphonie,8,admin
+"Kit Panneau Solaire 300W","Kit panneau solaire complet 300W - Idéal pour maison ou boutique - Inclus: panneau, contrôleur, batteries 100Ah, câbles - Installation guidée - Garantie 2 ans",380000,Énergie Solaire,12,admin
+"Power Bank Solaire 50000mAh","Chargeur solaire portable 50000mAh - 4 ports USB - Lampe LED intégrée - Résistant à l'eau - Parfait pour camping ou coupures d'électricité - Charge rapide",28000,Énergie Solaire,45,admin
+"Tissu Wax Hollandais 6 yards","Tissu Wax authentique 100% coton - 6 yards - Motifs traditionnels africains - Qualité premium - Idéal pour robes, chemises, décoration - Couleurs vives garanties",18000,Mode & Vêtements,60,admin
+"Boubou Homme Brodé","Boubou traditionnel pour homme - Broderie main - Tissu basin riche - Disponible tailles M à XXL - Parfait pour cérémonies et mariages - Couleurs: blanc, bleu, noir",45000,Mode & Vêtements,20,admin
+"Robe Ankara Femme Élégante","Robe Ankara moderne coupe ajustée - Tissu Wax premium - Tailles S à XL - Style africain contemporain - Parfaite pour bureau ou soirées",32000,Mode & Vêtements,35,admin
+"Ensemble Kente Enfant","Ensemble traditionnel Kente pour enfant 2-10 ans - Haut + Pantalon - Tissu confortable - Idéal fêtes et cérémonies - Motifs colorés authentiques",22000,Bébé & Enfants,28,admin
+"Gari Blanc 5kg","Gari blanc de qualité supérieure - 5kg - Produit au Togo - Texture fine - Parfait pour Eba - Sans additifs - Emballage hermétique - Livraison rapide",8500,Alimentation,150,admin
+"Mil Complet 10kg","Mil complet bio - 10kg - Cultivé au Niger - Riche en nutriments - Idéal pour bouillie et couscous - Emballage sac toile réutilisable",15000,Alimentation,80,admin
+"Pâte d'Arachide Naturelle 1kg","Pâte d'arachide 100% naturelle - 1kg - Sans sucre ajouté - Produit artisanal - Source de protéines - Parfaite pour sauces et tartines",5500,Alimentation,120,admin
+"Épices Mélange Togolais 500g","Mélange d'épices togolaises traditionnelles - 500g - Poivre, gingembre, piment, ail - Parfait pour soupes et grillades - Sachet refermable",7200,Alimentation,95,admin
+"Huile de Palme Rouge 5L","Huile de palme rouge pure - 5L - Extraction artisanale - Sans additifs chimiques - Parfaite pour cuisine africaine authentique - Bidon hygiénique",22000,Alimentation,60,admin
+"Fauteuil en Rotin Tressé","Fauteuil artisanal en rotin naturel - Tressage main - Confortable et résistant - Style africain moderne - Dimensions: 80x70x90cm - Livraison Lomé",65000,Maison & Cuisine,15,admin
+"Table Basse Bois d'Iroko","Table basse en bois d'Iroko massif - Fabrication artisanale togolaise - Finition vernie - 100x60x45cm - Design contemporain africain - Très durable",85000,Maison & Cuisine,8,admin
+"Panier de Rangement Paille","Panier artisanal en paille tressée - Taille moyenne 40cm - Fait main par artisans locaux - Parfait stockage fruits, linge - Décoration ethnique",12000,Maison & Cuisine,55,admin
+"Lampe Suspension Calebasse","Lampe suspension design calebasse sculptée - Hauteur 30cm - Ampoule LED incluse - Artisanat togolais authentique - Éclairage tamisé chaleureux",28000,Maison & Cuisine,22,admin
+"Set de 6 Assiettes Céramique","Set 6 assiettes céramique motifs africains - Diamètre 25cm - Fait main - Résistantes lave-vaisselle - Design unique - Idéal cadeau",35000,Maison & Cuisine,18,admin
+"Beurre de Karité Pur 500g","Beurre de karité 100% naturel - 500g - Non raffiné - Produit au Togo - Hydrate peau et cheveux - Bio et équitable - Pot en verre",8500,Beauté & Santé,140,admin
+"Savon Noir Africain 1kg","Savon noir africain authentique - 1kg - Fait main - Ingrédients naturels - Nettoie et purifie - Pour visage et corps - Sans produits chimiques",6500,Beauté & Santé,165,admin
+"Huile de Coco Vierge 500ml","Huile de coco vierge pressée à froid - 500ml - Bio - Parfaite pour cheveux et peau - Absorption rapide - Parfum naturel délicat",9500,Beauté & Santé,88,admin
+"Pommade Croissance Cheveux","Pommade naturelle croissance cheveux - Beurre karité + huiles essentielles - 250ml - Stimule pousse - Hydrate profondément - Recette africaine",11500,Beauté & Santé,72,admin
+"Gommage Corps Café & Karité","Gommage exfoliant corps - Café + beurre karité - 300g - Élimine cellules mortes - Peau douce et lisse - Fabrication artisanale",8800,Beauté & Santé,65,admin
+"Statue Masque Africain 50cm","Statue masque africain en bois ébène - 50cm - Sculpture artisanale - Symboles traditionnels - Pièce décorative unique - Certificat authenticité",58000,Art & Artisanat,12,admin
+"Djembé Artisanal Authentique","Djembé traditionnel fait main - Hauteur 60cm - Peau de chèvre tendue - Bois sculpté - Son professionnel - Parfait musiciens et décoration",125000,Art & Artisanat,6,admin
+"Tableau Peinture Batik 60x80","Tableau peinture batik sur tissu - 60x80cm - Scènes de vie africaine - Couleurs vibrantes - Artiste togolais - Cadre bois inclus",45000,Art & Artisanat,10,admin
+"Collier Perles Africaines","Collier artisanal perles en bois peintes - Design ethnique - Longueur réglable - Fait main - Chaque pièce unique - Cadeau idéal",15000,Art & Artisanat,42,admin
+"Sac à Main Bogolan","Sac à main tissu Bogolan authentique - Fermeture éclair - Poche intérieure - 35x25cm - Motifs traditionnels maliens - Résistant et élégant",28000,Art & Artisanat,25,admin
+"Poussette Bébé 3 Roues","Poussette bébé tout-terrain 3 roues - Pliable compacte - Harnais 5 points - Panier rangement - Capote soleil - Convient 0-3 ans - Garantie 1 an",95000,Bébé & Enfants,18,admin
+"Lit Bébé en Bois Massif","Lit bébé bois massif avec barreaux - 120x60cm - Matelas inclus - 3 positions hauteur - Transformable lit junior - Finition non toxique",125000,Bébé & Enfants,10,admin
+"Couches Bébé Taille 4 (96pc)","Pack 96 couches ultra absorbantes - Taille 4 (8-15kg) - Voiles naturels doux - Anti-fuites 12h - Attaches repositionnables - Hypoallergéniques",18500,Bébé & Enfants,85,admin
+"Chaise Haute Bébé Évolutive","Chaise haute évolutive 6 mois-5 ans - Plateau amovible - Harnais sécurité - Hauteur réglable - Facile nettoyer - Stable et robuste",55000,Bébé & Enfants,14,admin
+"Jouets Éducatifs Bois Set","Set 10 jouets éducatifs en bois - Puzzle, cubes, formes - Développement motricité - Peinture non toxique - 2-5 ans - Coffret cadeau",32000,Bébé & Enfants,28,admin
+"Ordinateur Portable HP 15","HP Laptop 15 - Intel Core i5 - 8GB RAM - 512GB SSD - Écran 15.6\" Full HD - Windows 11 - Webcam HD - Garantie constructeur 1 an",385000,Électronique,12,admin
+"Télévision LED 43 pouces","Smart TV LED 43 pouces 4K Ultra HD - Android TV - WiFi intégré - Bluetooth - HDMI x3 - USB x2 - Garantie 2 ans - Livraison gratuite Lomé",235000,Électronique,20,admin
+"Casque Audio Bluetooth JBL","Casque sans fil JBL Tune 750 - Bluetooth 5.0 - Autonomie 15h - Réduction bruit passive - Micro intégré - Son premium - Pliable",45000,Électronique,38,admin
+"Enceinte Bluetooth Portable","Enceinte Bluetooth étanche IPX7 - 20W - Autonomie 24h - Connexion TWS - Parfaite extérieur - Micro intégré - Charge USB-C",28000,Électronique,52,admin
+"Ventilateur Solaire 16 pouces","Ventilateur rechargeable avec panneau solaire - 16 pouces - Batterie 12h autonomie - 3 vitesses - Télécommande - Anti-moustiques LED",38000,Électronique,30,admin
+"Mixeur Blender 1000W","Mixeur blender puissant 1000W - Bol verre 1.5L - 5 vitesses - Lames inox - Parfait smoothies et soupes - Garantie 1 an",42000,Maison & Cuisine,24,admin
+"Fer à Repasser Vapeur","Fer à repasser vapeur 2200W - Semelle céramique antiadhésive - Réservoir 300ml - Anti-calcaire - Cordon 2m - Garantie constructeur",28000,Maison & Cuisine,35,admin
+"Batterie Solaire 200Ah","Batterie gel solaire 12V 200Ah - Décharge profonde - Durée vie 10 ans - Parfaite systèmes solaires - Garantie 3 ans",195000,Énergie Solaire,8,admin
+"Lampe Solaire LED Jardin","Lampe solaire LED extérieur - Pack 4 unités - Détecteur mouvement - Étanche IP65 - Autonomie 8h - Installation facile - Économique",18500,Énergie Solaire,45,admin
+"Chargeur Solaire USB 21W","Chargeur solaire pliable 21W - 2 ports USB - Charge rapide - Léger portable - Parfait voyage camping - Conversion 23%",24000,Énergie Solaire,40,admin
+"Sac École Enfant Solide","Sac à dos scolaire renforcé - Plusieurs compartiments - Bretelles rembourrées - Imperméable - Motifs colorés - Primaire et collège",15500,Bébé & Enfants,55,admin
+"Chaussures Sport Enfant","Baskets sport enfant pointures 28-35 - Semelle antidérapante - Respirantes - Scratch facile - Parfaites école et jeux",22000,Bébé & Enfants,48,admin
+"Biberons Anti-Coliques Set 3","Set 3 biberons anti-coliques 260ml - Sans BPA - Tétines silicone - Graduations précises - Facile nettoyer - 0-12 mois",16500,Bébé & Enfants,62,admin
+"Matelas Mousse 140x190cm","Matelas mousse haute densité - 140x190x15cm - Housse amovible lavable - Confortable ferme - Hypoallergénique - Garantie 5 ans",85000,Maison & Cuisine,18,admin
+"Rideau Occultant Thermique","Rideau occultant isolant thermique - 140x240cm - Œillets métalliques - Bloque lumière 99% - Couleurs disponibles: beige, gris, bleu",22000,Maison & Cuisine,40,admin
+"Machine à Coudre Portable","Machine à coudre électrique portable - 12 points différents - LED - Pédale incluse - Parfaite débutants - Manuel français - Garantie 1 an",68000,Maison & Cuisine,15,admin
+"Coffret Thé Tisanes Bio 24pc","Coffret découverte 24 sachets thés et tisanes bio - Menthe, bissap, citronnelle, gingembre - Produits locaux - Emballage cadeau",12500,Alimentation,70,admin
