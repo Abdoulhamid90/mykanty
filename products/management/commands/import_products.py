@@ -23,7 +23,7 @@ class Command(BaseCommand):
         self.stdout.write("🚀 Début de l'import...")
         
         try:
-            admin_user = User.objects.get(username='admin')
+            admin_user = User.objects.get(username='Abdoul-Hamid')
         except User.DoesNotExist:
             self.stdout.write("❌ Utilisateur admin non trouvé")
             return
