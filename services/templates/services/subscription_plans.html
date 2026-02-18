@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plans d'abonnement - My Kanty Services</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F8F9FA; }
+        .header { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 60px 0; text-align: center; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 15px; }
+        .subtitle { font-size: 1.2rem; opacity: 0.95; }
+        
+        .plans-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin: 50px 0; }
+        .plan-card { background: white; padding: 40px 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); position: relative; transition: transform 0.2s; }
+        .plan-card:hover { transform: translateY(-10px); box-shadow: 0 8px 30px rgba(0,0,0,0.15); }
+        .plan-card.featured { border: 3px solid #FF9933; }
+        .plan-card.featured::before { content: "⭐ Populaire"; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 5px 20px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; }
+        
+        .plan-name { font-size: 1.5rem; font-weight: 800; color: #0F1111; margin-bottom: 10px; text-align: center; }
+        .plan-price { text-align: center; margin: 20px 0; }
+        .plan-price .amount { font-size: 3rem; font-weight: 800; color: #006B3F; }
+        .plan-price .currency { font-size: 1.2rem; color: #565959; }
+        .plan-price .period { display: block; color: #565959; font-size: 0.9rem; margin-top: 5px; }
+        
+        .plan-features { list-style: none; margin: 30px 0; }
+        .plan-features li { padding: 12px 0; border-bottom: 1px solid #E0E0E0; color: #565959; display: flex; align-items: start; gap: 10px; }
+        .plan-features li:last-child { border: none; }
+        .plan-features li i { color: #006B3F; margin-top: 2px; }
+        
+        .btn-subscribe { display: block; width: 100%; background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 15px; text-align: center; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 1.1rem; transition: all 0.2s; }
+        .btn-subscribe:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255,153,51,0.4); }
+        
+        .comparison-table { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 2px 15px rgba(0,0,0,0.08); margin: 50px 0; overflow-x: auto; }
+        .comparison-table h2 { font-size: 2rem; color: #0F1111; margin-bottom: 30px; text-align: center; }
+        
+        @media (max-width: 768px) {
+            .plans-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1><i class="fas fa-rocket"></i> Choisissez votre plan</h1>
+            <p class="subtitle">Développez votre activité avec My Kanty Services</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="plans-grid">
+            {% for plan in plans %}
+            <div class="plan-card {% if plan.name == 'pro' %}featured{% endif %}">
+                <h3 class="plan-name">{{ plan.display_name }}</h3>
+                <div class="plan-price">
+                    <span class="amount">{{ plan.price|floatformat:0 }}</span>
+                    <span class="currency">XOF</span>
+                    <span class="period">par mois</span>
+                </div>
+                
+                <ul class="plan-features">
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>{% if plan.max_requests_per_month == -1 %}Demandes illimitées{% else %}{{ plan.max_requests_per_month }} demandes/mois{% endif %}</span>
+                    </li>
+                    {% for feature in plan.features %}
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <span>{{ feature }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                
+                {% if user.is_authenticated %}
+                <a href="{% url 'services:subscribe' plan.name %}" class="btn-subscribe">
+                    <i class="fas fa-rocket"></i> Choisir ce plan
+                </a>
+                {% else %}
+                <a href="{% url 'accounts:login' %}?next={% url 'services:subscribe' plan.name %}" class="btn-subscribe">
+                    <i class="fas fa-sign-in-alt"></i> Se connecter
+                </a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="comparison-table">
+            <h2>💡 Pourquoi devenir expert sur My Kanty ?</h2>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:30px;margin-top:30px;">
+                <div style="text-align:center;">
+                    <div style="font-size:3rem;color:#FF9933;margin-bottom:15px;">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 style="color:#0F1111;margin-bottom:10px;">Large audience</h3>
+                    <p style="color:#565959;">Des milliers de clients potentiels au Togo & Niger</p>
+                </div>
+                <div style="text-align:center;">
+                    <div style="font-size:3rem;color:#006B3F;margin-bottom:15px;">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 style="color:#0F1111;margin-bottom:10px;">Paiements sécurisés</h3>
+                    <p style="color:#565959;">Transactions protégées et vérifiées</p>
+                </div>
+                <div style="text-align:center;">
+                    <div style="font-size:3rem;color:#FF9933;margin-bottom:15px;">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 style="color:#0F1111;margin-bottom:10px;">Développez votre business</h3>
+                    <p style="color:#565959;">Statistiques et outils de gestion inclus</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="background:linear-gradient(135deg,#006B3F,#FF9933);color:white;padding:50px 30px;border-radius:12px;text-align:center;margin:50px 0;">
+            <h2 style="font-size:2rem;margin-bottom:15px;">Pas encore expert ?</h2>
+            <p style="font-size:1.1rem;margin-bottom:30px;opacity:0.95;">Créez votre profil professionnel en 5 minutes</p>
+            <a href="{% url 'services:become-expert' %}" style="display:inline-block;background:white;color:#006B3F;padding:15px 40px;border-radius:8px;font-weight:700;text-decoration:none;font-size:1.1rem;">
+                <i class="fas fa-user-plus"></i> Devenir Expert
+            </a>
+        </div>
+    </div>
+</body>
+</html>

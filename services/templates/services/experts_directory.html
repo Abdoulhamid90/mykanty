@@ -1,0 +1,215 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trouver un Expert - My Kanty Services</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F8F9FA; }
+        .header { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 15px 0; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.3rem; font-weight: 800; color: white; text-decoration: none; }
+        .hero-services { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 60px 0 40px; text-align: center; }
+        .hero-services h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 15px; }
+        .hero-services p { font-size: 1.1rem; opacity: 0.95; }
+        
+        .filters-bar { background: white; padding: 25px; border-radius: 12px; margin: -30px auto 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); max-width: 1100px; }
+        .filters-grid { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 15px; align-items: end; }
+        .filter-group label { display: block; font-weight: 600; color: #0F1111; margin-bottom: 5px; font-size: 0.9rem; }
+        .filter-group select, .filter-group input { width: 100%; padding: 10px 14px; border: 2px solid #D5D9D9; border-radius: 8px; font-size: 0.95rem; font-family: 'Inter', sans-serif; }
+        .btn-filter { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 11px 25px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+        
+        .experts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; margin: 30px 0; }
+        .expert-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08); transition: transform 0.2s, box-shadow 0.2s; }
+        .expert-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+        .expert-avatar { width: 100%; height: 200px; background: linear-gradient(135deg, #FF9933, #006B3F); display: flex; align-items: center; justify-content: center; color: white; font-size: 4rem; font-weight: 800; position: relative; }
+        .expert-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .expert-badges { position: absolute; top: 10px; right: 10px; display: flex; gap: 5px; }
+        .badge { background: rgba(255,255,255,0.95); padding: 5px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+        .badge.verified { color: #006B3F; }
+        .badge.top { color: #FFD700; }
+        
+        .expert-body { padding: 20px; }
+        .expert-name { font-size: 1.2rem; font-weight: 700; color: #0F1111; margin-bottom: 5px; }
+        .expert-cat { color: #FF9933; font-size: 0.85rem; font-weight: 600; margin-bottom: 10px; }
+        .expert-bio { color: #565959; font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .expert-meta { display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .meta-item { display: flex; align-items: center; gap: 5px; color: #565959; font-size: 0.85rem; }
+        .meta-item i { color: #FF9933; }
+        .expert-rating { display: flex; align-items: center; gap: 8px; margin-bottom: 15px; }
+        .stars { color: #FFD700; font-size: 1rem; }
+        .rating-num { font-weight: 700; color: #0F1111; }
+        .rating-count { color: #565959; font-size: 0.85rem; }
+        .expert-price { font-size: 1.1rem; font-weight: 700; color: #006B3F; margin-bottom: 15px; }
+        .btn-contact { display: block; width: 100%; background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 12px; text-align: center; border-radius: 8px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+        .btn-contact:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255,153,51,0.4); }
+        
+        .no-results { text-align: center; padding: 60px 20px; }
+        .no-results i { font-size: 4rem; color: #D5D9D9; margin-bottom: 20px; }
+        
+        .pagination { display: flex; justify-content: center; gap: 10px; margin: 40px 0; }
+        .pagination a, .pagination span { padding: 10px 15px; background: white; border-radius: 8px; text-decoration: none; color: #0F1111; font-weight: 600; }
+        .pagination .current { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; }
+        
+        @media (max-width: 768px) {
+            .filters-grid { grid-template-columns: 1fr; }
+            .hero-services h1 { font-size: 1.8rem; }
+            .experts-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="{% url 'home' %}" class="logo"><i class="fas fa-shopping-bag"></i> My Kanty</a>
+                <div style="display:flex;gap:15px;">
+                    <a href="{% url 'services:experts-directory' %}" style="color:white;text-decoration:none;">Services</a>
+                    <a href="{% url 'products:product-list' %}" style="color:white;text-decoration:none;">Produits</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="hero-services">
+        <div class="container">
+            <h1><i class="fas fa-briefcase"></i> Trouvez un Expert</h1>
+            <p>Des professionnels qualifiés au Togo & Niger pour tous vos besoins</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <form method="GET" class="filters-bar">
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label>Rechercher</label>
+                    <input type="text" name="q" placeholder="Plombier, électricien, développeur..." value="{{ search_query }}">
+                </div>
+                <div class="filter-group">
+                    <label>Catégorie</label>
+                    <select name="category">
+                        <option value="">Toutes</option>
+                        {% for cat in categories %}
+                        <option value="{{ cat.slug }}" {% if cat.slug == selected_category %}selected{% endif %}>{{ cat.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Ville</label>
+                    <select name="city">
+                        <option value="">Toutes</option>
+                        {% for city in cities %}
+                        <option value="{{ city }}" {% if city == selected_city %}selected{% endif %}>{{ city }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn-filter"><i class="fas fa-search"></i> Filtrer</button>
+            </div>
+        </form>
+
+        <div style="margin:20px 0;display:flex;justify-content:space-between;align-items:center;">
+            <p style="color:#565959;"><strong>{{ experts.paginator.count }}</strong> experts trouvés</p>
+            <select onchange="window.location.href='?sort='+this.value" style="padding:8px 12px;border:2px solid #D5D9D9;border-radius:8px;">
+                <option value="-average_rating" {% if current_sort == '-average_rating' %}selected{% endif %}>Mieux notés</option>
+                <option value="price_asc" {% if current_sort == 'price_asc' %}selected{% endif %}>Prix croissant</option>
+                <option value="price_desc" {% if current_sort == 'price_desc' %}selected{% endif %}>Prix décroissant</option>
+                <option value="-created_at" {% if current_sort == '-created_at' %}selected{% endif %}>Plus récents</option>
+            </select>
+        </div>
+
+        {% if experts %}
+        <div class="experts-grid">
+            {% for expert in experts %}
+            <div class="expert-card">
+                <div class="expert-avatar">
+                    {% if expert.avatar %}
+                    <img src="{{ expert.avatar.url }}" alt="{{ expert.business_name }}">
+                    {% else %}
+                    {{ expert.business_name|slice:":1"|upper }}
+                    {% endif %}
+                    <div class="expert-badges">
+                        {% if expert.is_verified %}
+                        <span class="badge verified"><i class="fas fa-check-circle"></i> Vérifié</span>
+                        {% endif %}
+                        {% if expert.is_top_rated %}
+                        <span class="badge top"><i class="fas fa-star"></i> Top</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="expert-body">
+                    <h3 class="expert-name">{{ expert.business_name }}</h3>
+                    <div class="expert-cat">
+                        {% for cat in expert.categories.all|slice:":2" %}
+                        {{ cat.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </div>
+                    <p class="expert-bio">{{ expert.bio|truncatewords:20 }}</p>
+                    <div class="expert-meta">
+                        <span class="meta-item"><i class="fas fa-map-marker-alt"></i> {{ expert.city }}</span>
+                        <span class="meta-item"><i class="fas fa-briefcase"></i> {{ expert.years_experience }} ans</span>
+                    </div>
+                    {% if expert.average_rating > 0 %}
+                    <div class="expert-rating">
+                        <span class="stars">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= expert.average_rating %}
+                                <i class="fas fa-star"></i>
+                                {% else %}
+                                <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </span>
+                        <span class="rating-num">{{ expert.average_rating }}</span>
+                        <span class="rating-count">({{ expert.total_reviews }} avis)</span>
+                    </div>
+                    {% endif %}
+                    {% if expert.price_description %}
+                    <div class="expert-price">{{ expert.price_description }}</div>
+                    {% endif %}
+                    <a href="{% url 'services:expert-detail' expert.slug %}" class="btn-contact">
+                        <i class="fas fa-eye"></i> Voir le profil
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if experts.has_other_pages %}
+        <div class="pagination">
+            {% if experts.has_previous %}
+            <a href="?page={{ experts.previous_page_number }}"><i class="fas fa-chevron-left"></i></a>
+            {% endif %}
+            <span class="current">{{ experts.number }}</span>
+            <span>sur {{ experts.paginator.num_pages }}</span>
+            {% if experts.has_next %}
+            <a href="?page={{ experts.next_page_number }}"><i class="fas fa-chevron-right"></i></a>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% else %}
+        <div class="no-results">
+            <i class="fas fa-search"></i>
+            <h2>Aucun expert trouvé</h2>
+            <p>Essayez de modifier vos filtres de recherche</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <div style="margin-top:60px;background:linear-gradient(135deg,#006B3F,#FF9933);color:white;padding:40px 0;text-align:center;">
+        <div class="container">
+            <h2 style="margin-bottom:15px;">Vous êtes un professionnel ?</h2>
+            <p style="font-size:1.1rem;margin-bottom:25px;opacity:0.95;">Rejoignez My Kanty Services et développez votre activité</p>
+            <a href="{% url 'services:become-expert' %}" style="display:inline-block;background:white;color:#006B3F;padding:15px 35px;border-radius:8px;font-weight:700;text-decoration:none;font-size:1.1rem;">
+                <i class="fas fa-rocket"></i> Devenir Expert
+            </a>
+        </div>
+    </div>
+</body>
+</html>

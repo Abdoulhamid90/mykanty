@@ -1,0 +1,159 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demander un service - {{ expert.business_name }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F8F9FA; }
+        .header { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 15px 0; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .back-link { color: white; text-decoration: none; font-weight: 600; }
+        
+        .form-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 2px 15px rgba(0,0,0,0.08); margin: 30px 0; }
+        .form-card h1 { font-size: 2rem; color: #0F1111; margin-bottom: 10px; }
+        .form-card .subtitle { color: #565959; margin-bottom: 30px; }
+        
+        .expert-summary { background: linear-gradient(135deg, rgba(255,153,51,0.1), rgba(0,107,63,0.1)); padding: 20px; border-radius: 8px; margin-bottom: 30px; display: flex; align-items: center; gap: 15px; }
+        .expert-summary img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; }
+        .expert-summary .avatar-small { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #FF9933, #006B3F); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: 800; }
+        .expert-summary div h3 { color: #0F1111; margin-bottom: 5px; }
+        .expert-summary div p { color: #565959; font-size: 0.9rem; }
+        
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; font-weight: 600; color: #0F1111; margin-bottom: 8px; }
+        .form-group label span { color: #C7511F; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 15px; border: 2px solid #D5D9D9; border-radius: 8px; font-size: 1rem; font-family: 'Inter', sans-serif; transition: border 0.2s; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #FF9933; }
+        .form-group textarea { min-height: 120px; resize: vertical; }
+        .form-group small { color: #565959; font-size: 0.85rem; margin-top: 5px; display: block; }
+        
+        .btn-submit { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 15px 40px; border: none; border-radius: 8px; font-weight: 700; font-size: 1.1rem; cursor: pointer; width: 100%; transition: all 0.2s; }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(255,153,51,0.4); }
+        
+        .info-box { background: #E8F5E9; border-left: 4px solid #006B3F; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
+        .info-box i { color: #006B3F; margin-right: 10px; }
+        .info-box strong { color: #0F1111; }
+        .info-box p { color: #565959; margin-top: 10px; line-height: 1.6; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <a href="{% url 'services:expert-detail' expert.slug %}" class="back-link">
+                <i class="fas fa-arrow-left"></i> Retour au profil
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="form-card">
+            <h1><i class="fas fa-paper-plane"></i> Demander un service</h1>
+            <p class="subtitle">Décrivez votre besoin et {{ expert.business_name }} vous contactera rapidement</p>
+
+            <div class="expert-summary">
+                {% if expert.avatar %}
+                <img src="{{ expert.avatar.url }}" alt="{{ expert.business_name }}">
+                {% else %}
+                <div class="avatar-small">{{ expert.business_name|slice:":1"|upper }}</div>
+                {% endif %}
+                <div>
+                    <h3>{{ expert.business_name }}</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> {{ expert.city }} • <i class="fas fa-star"></i> {{ expert.average_rating }}/5 ({{ expert.total_reviews }} avis)</p>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <i class="fas fa-shield-alt"></i> <strong>Comment ça marche ?</strong>
+                <p>1. Remplissez ce formulaire avec les détails de votre demande<br>
+                2. {{ expert.business_name }} recevra votre demande par email et SMS<br>
+3. Vous serez contacté dans les 24-48h pour un devis gratuit<br>
+                4. Acceptez le devis et planifiez votre service !</p>
+            </div>
+
+            {% if messages %}
+            {% for message in messages %}
+            <div style="background:{% if message.tags == 'error' %}#FFE5E5{% else %}#E8F5E9{% endif %};padding:15px;border-radius:8px;margin-bottom:20px;border-left:4px solid {% if message.tags == 'error' %}#C7511F{% else %}#006B3F{% endif %};">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label>Catégorie de service <span>*</span></label>
+                    <select name="category" required>
+                        <option value="">Sélectionnez une catégorie</option>
+                        {% for cat in categories %}
+                        <option value="{{ cat.id }}">{{ cat.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Titre de votre demande <span>*</span></label>
+                    <input type="text" name="title" placeholder="Ex: Réparation fuite d'eau cuisine" required maxlength="200">
+                    <small>Décrivez votre besoin en quelques mots</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Description détaillée <span>*</span></label>
+                    <textarea name="description" placeholder="Décrivez en détail votre besoin, le contexte, les attentes..." required></textarea>
+                    <small>Plus votre description est précise, meilleur sera le devis</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Budget estimé (optionnel)</label>
+                    <input type="number" name="budget" placeholder="Montant en XOF" min="0">
+                    <small>Si vous avez une idée du budget, cela aidera l'expert à vous faire une proposition adaptée</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Localisation <span>*</span></label>
+                    <input type="text" name="location" placeholder="Ex: Lomé, Bè Kpota" required maxlength="255">
+                </div>
+
+                <div class="form-group">
+                    <label>Date préférée (optionnel)</label>
+                    <input type="date" name="preferred_date" min="{{ today|date:'Y-m-d' }}">
+                </div>
+
+                <hr style="margin:30px 0;border:none;border-top:1px solid #E0E0E0;">
+
+                <h3 style="color:#0F1111;margin-bottom:20px;">Vos coordonnées</h3>
+
+                <div class="form-group">
+                    <label>Votre nom <span>*</span></label>
+                    <input type="text" name="client_name" value="{% if user.is_authenticated %}{{ user.get_full_name|default:user.username }}{% endif %}" required maxlength="100">
+                </div>
+
+                <div class="form-group">
+                    <label>Téléphone <span>*</span></label>
+                    <input type="tel" name="client_phone" placeholder="+228 XX XX XX XX" required maxlength="20">
+                    <small>L'expert vous contactera sur ce numéro</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Email <span>*</span></label>
+                    <input type="email" name="client_email" value="{% if user.is_authenticated %}{{ user.email }}{% endif %}" required>
+                    <small>Vous recevrez une confirmation par email</small>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-paper-plane"></i> Envoyer ma demande
+                </button>
+
+                <p style="text-align:center;margin-top:15px;color:#565959;font-size:0.85rem;">
+                    <i class="fas fa-lock"></i> Vos informations sont sécurisées et ne seront partagées qu'avec {{ expert.business_name }}
+                </p>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

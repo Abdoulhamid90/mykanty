@@ -1,0 +1,254 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ expert.business_name }} - Expert My Kanty</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F8F9FA; }
+        .header { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 15px 0; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        .back-link { color: white; text-decoration: none; font-weight: 600; }
+        
+        .profile-header { background: white; margin: 30px 0; border-radius: 12px; padding: 40px; box-shadow: 0 2px 15px rgba(0,0,0,0.08); }
+        .profile-top { display: grid; grid-template-columns: 150px 1fr auto; gap: 30px; align-items: start; }
+        .avatar-large { width: 150px; height: 150px; border-radius: 50%; background: linear-gradient(135deg, #FF9933, #006B3F); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem; font-weight: 800; overflow: hidden; }
+        .avatar-large img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-info h1 { font-size: 2rem; margin-bottom: 10px; color: #0F1111; }
+        .categories-list { color: #FF9933; font-weight: 600; margin-bottom: 15px; }
+        .badges-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; }
+        .badge-item { background: #E8F5E9; color: #006B3F; padding: 8px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+        .badge-item.verified { background: #E8F5E9; }
+        .badge-item.top { background: #FFF9CC; color: #FFD700; }
+        .badge-item.fast { background: #FFE5CC; color: #FF9933; }
+        .profile-meta { display: flex; gap: 20px; color: #565959; flex-wrap: wrap; }
+        .meta { display: flex; align-items: center; gap: 5px; }
+        .rating-display { display: flex; align-items: center; gap: 10px; }
+        .stars-big { color: #FFD700; font-size: 1.3rem; }
+        .rating-num-big { font-size: 1.5rem; font-weight: 800; color: #0F1111; }
+        .btn-request { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 15px 40px; border-radius: 8px; font-weight: 700; text-decoration: none; display: inline-block; font-size: 1.1rem; }
+        
+        .content-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin: 30px 0; }
+        .section { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .section h2 { font-size: 1.4rem; color: #0F1111; margin-bottom: 20px; border-left: 4px solid #FF9933; padding-left: 15px; }
+        .section p { color: #565959; line-height: 1.7; margin-bottom: 15px; }
+        
+        .skills-list { display: flex; flex-wrap: wrap; gap: 10px; }
+        .skill-tag { background: #F8F9FA; border: 2px solid #D5D9D9; padding: 8px 15px; border-radius: 20px; color: #0F1111; font-weight: 600; font-size: 0.9rem; }
+        
+        .info-grid { display: grid; gap: 15px; }
+        .info-item { display: flex; align-items: start; gap: 10px; }
+        .info-item i { color: #FF9933; font-size: 1.2rem; margin-top: 2px; }
+        .info-item div strong { display: block; color: #0F1111; margin-bottom: 3px; }
+        .info-item div span { color: #565959; }
+        
+        .price-box { background: linear-gradient(135deg, rgba(255,153,51,0.1), rgba(0,107,63,0.1)); border: 2px solid #FF9933; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 20px; }
+        .price-box .price { font-size: 2rem; font-weight: 800; color: #006B3F; }
+        
+        .review-card { border-bottom: 1px solid #E0E0E0; padding: 20px 0; }
+        .review-card:last-child { border: none; }
+        .review-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px; }
+        .review-author { font-weight: 700; color: #0F1111; }
+        .review-date { color: #999; font-size: 0.85rem; }
+        .review-stars { color: #FFD700; margin-bottom: 8px; }
+        .review-text { color: #565959; line-height: 1.6; }
+        
+        @media (max-width: 768px) {
+            .profile-top { grid-template-columns: 1fr; text-align: center; }
+            .content-grid { grid-template-columns: 1fr; }
+            .avatar-large { margin: 0 auto; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <a href="{% url 'services:experts-directory' %}" class="back-link">
+                <i class="fas fa-arrow-left"></i> Retour à l'annuaire
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="profile-header">
+            <div class="profile-top">
+                <div class="avatar-large">
+                    {% if expert.avatar %}
+                    <img src="{{ expert.avatar.url }}" alt="{{ expert.business_name }}">
+                    {% else %}
+                    {{ expert.business_name|slice:":1"|upper }}
+                    {% endif %}
+                </div>
+                
+                <div class="profile-info">
+                    <h1>{{ expert.business_name }}</h1>
+                    <div class="categories-list">
+                        {% for cat in expert.categories.all %}
+                        <i class="{{ cat.icon }}"></i> {{ cat.name }}{% if not forloop.last %} • {% endif %}
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="badges-row">
+                        {% for badge in badges %}
+                        <span class="badge-item {{ badge.color }}">
+                            <i class="fas {{ badge.icon }}"></i> {{ badge.name }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="profile-meta">
+                        <span class="meta"><i class="fas fa-map-marker-alt"></i> {{ expert.city }}, {{ expert.get_country_display }}</span>
+                        <span class="meta"><i class="fas fa-briefcase"></i> {{ expert.years_experience }} ans d'expérience</span>
+                        <span class="meta"><i class="fas fa-check-circle"></i> {{ expert.completed_services }} services réalisés</span>
+                    </div>
+                </div>
+                
+                <div class="rating-display">
+                    <div style="text-align:center;">
+                        <div class="stars-big">
+                            {% for i in "12345" %}
+                            {% if forloop.counter <= expert.average_rating %}
+                            <i class="fas fa-star"></i>
+                            {% else %}
+                            <i class="far fa-star"></i>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="rating-num-big">{{ expert.average_rating }}</div>
+                        <div style="color:#565959;font-size:0.9rem;">{{ expert.total_reviews }} avis</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div>
+                <div class="section">
+                    <h2><i class="fas fa-user"></i> À propos</h2>
+                    <p>{{ expert.bio }}</p>
+                </div>
+
+                <div class="section" style="margin-top:30px;">
+                    <h2><i class="fas fa-tools"></i> Compétences</h2>
+                    <div class="skills-list">
+                        {% for skill in expert.skills.split:',' %}
+                        <span class="skill-tag">{{ skill|trim }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {% if expert.certifications %}
+                <div class="section" style="margin-top:30px;">
+                    <h2><i class="fas fa-certificate"></i> Diplômes & Certifications</h2>
+                    <p>{{ expert.certifications }}</p>
+                </div>
+                {% endif %}
+
+                <div class="section" style="margin-top:30px;">
+                    <h2><i class="fas fa-star"></i> Avis Clients ({{ expert.total_reviews }})</h2>
+                    {% if reviews %}
+                        {% for review in reviews %}
+                        <div class="review-card">
+                            <div class="review-header">
+                                <div>
+                                    <div class="review-author">{{ review.client.get_full_name|default:review.client.username }}</div>
+                                    <div class="review-stars">
+                                        {% for i in "12345" %}
+                                        {% if forloop.counter <= review.rating %}
+                                        <i class="fas fa-star"></i>
+                                        {% else %}
+                                        <i class="far fa-star"></i>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="review-date">{{ review.created_at|date:"d M Y" }}</div>
+                            </div>
+                            <p class="review-text">{{ review.comment }}</p>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p style="color:#999;text-align:center;padding:30px;">Aucun avis pour le moment</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div>
+                {% if expert.price_description %}
+                <div class="price-box">
+                    <div style="color:#565959;font-size:0.9rem;margin-bottom:5px;">Tarif</div>
+                    <div class="price">{{ expert.price_description }}</div>
+                </div>
+                {% endif %}
+
+                <a href="{% url 'services:request-service' expert.slug %}" class="btn-request" style="display:block;text-align:center;margin-bottom:30px;">
+                    <i class="fas fa-paper-plane"></i> Demander un devis
+                </a>
+
+                <div class="section">
+                    <h2><i class="fas fa-info-circle"></i> Informations</h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <strong>Localisation</strong>
+                                <span>{{ expert.city }}, {{ expert.get_country_display }}</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-map"></i>
+                            <div>
+                                <strong>Zone d'intervention</strong>
+                                <span>{{ expert.service_zone }}</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <strong>Téléphone</strong>
+                                <span>{{ expert.phone }}</span>
+                            </div>
+                        </div>
+                        {% if expert.whatsapp %}
+                        <div class="info-item">
+                            <i class="fab fa-whatsapp"></i>
+                            <div>
+                                <strong>WhatsApp</strong>
+                                <span>{{ expert.whatsapp }}</span>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="info-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <strong>Email</strong>
+                                <span>{{ expert.email }}</span>
+                            </div>
+                        </div>
+                        {% if expert.website %}
+                        <div class="info-item">
+                            <i class="fas fa-globe"></i>
+                            <div>
+                                <strong>Site web</strong>
+                                <span><a href="{{ expert.website }}" target="_blank">{{ expert.website }}</a></span>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if expert.availability_note %}
+                <div style="background:#FFF9CC;padding:15px;border-radius:8px;margin-top:20px;border-left:4px solid #FF9933;">
+                    <strong style="color:#0F1111;"><i class="fas fa-info-circle"></i> Disponibilité</strong>
+                    <p style="color:#565959;margin-top:5px;font-size:0.9rem;">{{ expert.availability_note }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
