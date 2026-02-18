@@ -1,6 +1,6 @@
 """
-VIEWS POUR MY KANTY SERVICES
-Créez ce fichier : services/views.py
+VIEWS COMPLÈTES POUR MY KANTY SERVICES
+Remplacez TOUT le contenu de : services/views.py
 """
 
 from django.shortcuts import render, redirect, get_object_or_404
@@ -8,9 +8,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q, Avg
 from django.core.paginator import Paginator
-from .models import Expert, ServiceCategory, ServiceRequest, Review, SubscriptionPlan
+from django.core.mail import send_mail
+from django.conf import settings
 from django.utils import timezone
 from datetime import datetime, timedelta
+from .models import Expert, ServiceCategory, ServiceRequest, Review, SubscriptionPlan
 
 def experts_directory(request):
     """Page annuaire des experts avec filtres"""
@@ -121,7 +123,112 @@ def request_service(request, expert_slug):
         expert.total_requests += 1
         expert.save()
         
-        # TODO: Envoyer notification à l'expert par email/SMS
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # NOTIFICATION EMAIL À L'EXPERT
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        try:
+            subject = f"🔔 Nouvelle demande de service - {service_request.title}"
+            
+            message = f"""
+Bonjour {expert.business_name},
+
+Vous avez reçu une nouvelle demande de service sur My Kanty !
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 DÉTAILS DE LA DEMANDE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📌 Titre : {service_request.title}
+📝 Description : {service_request.description}
+
+👤 CLIENT
+━━━━━━━━
+• Nom : {service_request.client_name}
+• Téléphone : {service_request.client_phone}
+• Email : {service_request.client_email}
+• Localisation : {service_request.location}
+
+{f'💰 Budget : {service_request.budget} XOF' if service_request.budget else ''}
+{f'📅 Date préférée : {service_request.preferred_date.strftime("%d/%m/%Y")}' if service_request.preferred_date else ''}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚡ ACTION REQUISE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Connectez-vous à votre dashboard pour répondre au client :
+👉 https://mykanty-production.up.railway.app/services/dashboard/demande/{service_request.id}/
+
+⏰ Répondez dans les 24h pour maximiser vos chances d'obtenir ce contrat !
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+My Kanty Services
+🇹🇬 +228 93 33 78 02 | 🇳🇪 +227 92 53 44 35
+contact@mykanty.com
+            """
+            
+            send_mail(
+                subject=subject,
+                message=message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[expert.email],
+                fail_silently=True,
+            )
+            
+            print(f"✅ Email envoyé à l'expert: {expert.email}")
+            
+        except Exception as e:
+            print(f"❌ Erreur envoi email expert: {str(e)}")
+        
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # NOTIFICATION EMAIL AU CLIENT
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        try:
+            client_subject = f"✅ Demande envoyée à {expert.business_name}"
+            
+            client_message = f"""
+Bonjour {service_request.client_name},
+
+Votre demande de service a bien été envoyée à {expert.business_name}.
+
+📋 VOTRE DEMANDE
+━━━━━━━━━━━━━━━
+{service_request.title}
+{service_request.description}
+
+⏰ PROCHAINES ÉTAPES
+━━━━━━━━━━━━━━━━
+1. {expert.business_name} va examiner votre demande
+2. Il vous contactera dans les 24-48h par téléphone ou email
+3. Il vous proposera un devis personnalisé
+4. Vous pourrez accepter et planifier le service
+
+📞 CONTACT DE L'EXPERT
+━━━━━━━━━━━━━━━━━━━
+• Téléphone : {expert.phone}
+• Email : {expert.email}
+{f'• WhatsApp : {expert.whatsapp}' if expert.whatsapp else ''}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Merci d'utiliser My Kanty Services !
+
+My Kanty
+🇹🇬 +228 93 33 78 02 | 🇳🇪 +227 92 53 44 35
+            """
+            
+            send_mail(
+                subject=client_subject,
+                message=client_message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[service_request.client_email],
+                fail_silently=True,
+            )
+            
+            print(f"✅ Email envoyé au client: {service_request.client_email}")
+            
+        except Exception as e:
+            print(f"❌ Erreur envoi email client: {str(e)}")
         
         messages.success(request, f"Votre demande a été envoyée à {expert.business_name}. Vous serez contacté sous peu !")
         return redirect('services:request-success', request_id=service_request.id)
@@ -131,6 +238,7 @@ def request_service(request, expert_slug):
     context = {
         'expert': expert,
         'categories': categories,
+        'today': timezone.now(),
     }
     
     return render(request, 'services/request_service.html', context)
@@ -211,6 +319,32 @@ def expert_request_detail(request, request_id):
             service_request.responded_at = timezone.now()
             service_request.save()
             messages.success(request, "Votre réponse a été envoyée au client.")
+            
+            # Envoyer email au client
+            try:
+                subject = f"📩 {service_request.expert.business_name} a répondu à votre demande"
+                message = f"""
+Bonjour {service_request.client_name},
+
+{service_request.expert.business_name} a répondu à votre demande de service !
+
+📋 VOTRE DEMANDE
+{service_request.title}
+
+💬 RÉPONSE DE L'EXPERT
+{service_request.expert_response}
+
+{f'💰 DEVIS PROPOSÉ: {service_request.expert_quote} XOF' if service_request.expert_quote else ''}
+
+📞 CONTACT
+• Téléphone: {service_request.expert.phone}
+• Email: {service_request.expert.email}
+
+My Kanty Services
+                """
+                send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [service_request.client_email], fail_silently=True)
+            except:
+                pass
         
         elif action == 'accept':
             service_request.status = 'accepted'
@@ -313,11 +447,10 @@ def subscribe(request, plan_name):
         return redirect('services:become-expert')
     
     if request.method == 'POST':
-        # Vérification du paiement (à implémenter)
+        # Vérification du paiement (à implémenter avec Mobile Money)
         payment_reference = request.POST.get('payment_reference')
         
         # Créer l'abonnement
-        from datetime import timedelta
         start_date = timezone.now()
         end_date = start_date + timedelta(days=30)
         
@@ -374,6 +507,7 @@ def become_expert(request):
             country=request.POST.get('country'),
             phone=request.POST.get('phone'),
             email=request.POST.get('email'),
+            service_zone=request.POST.get('service_zone', ''),
             years_experience=request.POST.get('years_experience', 0),
         )
         

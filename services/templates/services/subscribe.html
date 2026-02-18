@@ -1,0 +1,163 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Souscrire au plan {{ plan.display_name }} - My Kanty</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F8F9FA; }
+        .header { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 15px 0; }
+        .container { max-width: 700px; margin: 0 auto; padding: 20px; }
+        .back-link { color: white; text-decoration: none; font-weight: 600; }
+        
+        .plan-summary { background: linear-gradient(135deg, rgba(255,153,51,0.1), rgba(0,107,63,0.1)); padding: 40px; border-radius: 12px; text-align: center; margin: 30px 0; border: 3px solid #FF9933; }
+        .plan-summary h1 { font-size: 2rem; color: #0F1111; margin-bottom: 15px; }
+        .plan-summary .price { font-size: 3rem; font-weight: 800; color: #006B3F; margin: 20px 0; }
+        .plan-summary .price span { font-size: 1.2rem; color: #565959; }
+        .plan-summary ul { list-style: none; margin: 20px 0; text-align: left; max-width: 400px; margin: 20px auto; }
+        .plan-summary ul li { padding: 10px 0; color: #565959; display: flex; align-items: start; gap: 10px; }
+        .plan-summary ul li i { color: #006B3F; margin-top: 3px; }
+        
+        .form-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 2px 15px rgba(0,0,0,0.08); margin: 30px 0; }
+        .form-card h2 { font-size: 1.5rem; color: #0F1111; margin-bottom: 20px; }
+        
+        .payment-info { background: #E8F5E9; padding: 25px; border-radius: 12px; margin: 20px 0; border-left: 4px solid #006B3F; }
+        .payment-info h3 { color: #0F1111; margin-bottom: 15px; font-size: 1.2rem; }
+        .payment-method { background: white; padding: 15px; border-radius: 8px; margin: 10px 0; display: flex; align-items: center; gap: 15px; }
+        .payment-method .icon { width: 50px; height: 50px; background: #F8F9FA; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #FF9933; }
+        .payment-method .details strong { display: block; color: #0F1111; margin-bottom: 3px; }
+        .payment-method .details span { color: #565959; font-size: 0.9rem; }
+        
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; font-weight: 600; color: #0F1111; margin-bottom: 8px; }
+        .form-group input { width: 100%; padding: 12px 15px; border: 2px solid #D5D9D9; border-radius: 8px; font-size: 1rem; font-family: 'Inter', sans-serif; }
+        .form-group input:focus { outline: none; border-color: #FF9933; }
+        .form-group small { color: #565959; font-size: 0.85rem; margin-top: 5px; display: block; }
+        
+        .btn-submit { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 15px 40px; border: none; border-radius: 8px; font-weight: 700; font-size: 1.1rem; cursor: pointer; width: 100%; transition: all 0.2s; }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(255,153,51,0.4); }
+        
+        .instructions { background: #FFF9CC; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #FF9933; }
+        .instructions h4 { color: #0F1111; margin-bottom: 10px; }
+        .instructions ol { padding-left: 20px; color: #565959; line-height: 1.8; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <a href="{% url 'services:subscription-plans' %}" class="back-link">
+                <i class="fas fa-arrow-left"></i> Retour aux plans
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        {% if messages %}
+        {% for message in messages %}
+        <div style="background:{% if message.tags == 'error' %}#FFE5E5{% else %}#E8F5E9{% endif %};padding:15px;border-radius:8px;margin:20px 0;border-left:4px solid {% if message.tags == 'error' %}#C7511F{% else %}#006B3F{% endif %};">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <div class="plan-summary">
+            <h1>Plan {{ plan.display_name }}</h1>
+            <div class="price">{{ plan.price|floatformat:0 }} <span>XOF/mois</span></div>
+            <ul>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span>{% if plan.max_requests_per_month == -1 %}Demandes illimitées{% else %}{{ plan.max_requests_per_month }} demandes par mois{% endif %}</span>
+                </li>
+                {% for feature in plan.features %}
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span>{{ feature }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="form-card">
+            <h2><i class="fas fa-credit-card"></i> Informations de paiement</h2>
+            
+            <div class="payment-info">
+                <h3>💳 Moyens de paiement acceptés</h3>
+                
+                <div class="payment-method">
+                    <div class="icon">🇹🇬</div>
+                    <div class="details">
+                        <strong>Togo - Mobile Money</strong>
+                        <span>Tmoney ou Mixx → <strong>+228 72 22 23 72</strong></span>
+                        <span>Nita → <strong>+228 72 22 23 72</strong></span>
+                    </div>
+                </div>
+                
+                <div class="payment-method">
+                    <div class="icon">🇳🇪</div>
+                    <div class="details">
+                        <strong>Niger - Mobile Money</strong>
+                        <span>Mobile Money → <strong>+227 92 53 44 35</strong></span>
+                        <span>Nita → <strong>+227 92 53 44 35</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="instructions">
+                <h4><i class="fas fa-info-circle"></i> Comment souscrire ?</h4>
+                <ol>
+                    <li>Effectuez un transfert Mobile Money de <strong>{{ plan.price|floatformat:0 }} XOF</strong> vers le numéro correspondant à votre pays</li>
+                    <li>Notez la <strong>référence de transaction</strong> que vous recevez par SMS</li>
+                    <li>Entrez cette référence dans le formulaire ci-dessous</li>
+                    <li>Validez - votre abonnement sera activé sous 2-4 heures après vérification</li>
+                </ol>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label>Référence de transaction Mobile Money <span style="color:#C7511F;">*</span></label>
+                    <input type="text" name="payment_reference" placeholder="Ex: TM2024021812345" required>
+                    <small>La référence de votre paiement Mobile Money (reçue par SMS)</small>
+                </div>
+
+                <div style="background:#E8F5E9;padding:20px;border-radius:8px;margin:20px 0;">
+                    <p style="color:#0F1111;margin:0;"><i class="fas fa-shield-alt"></i> <strong>Paiement sécurisé</strong></p>
+                    <p style="color:#565959;margin:10px 0 0 0;font-size:0.9rem;">Votre abonnement sera activé manuellement après vérification de votre paiement. Vous recevrez un email de confirmation.</p>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-check-circle"></i> Activer mon abonnement {{ plan.display_name }}
+                </button>
+
+                <p style="text-align:center;margin-top:15px;color:#565959;font-size:0.85rem;">
+                    <i class="fas fa-lock"></i> Paiement sécurisé • Vérification manuelle sous 2-4h
+                </p>
+            </form>
+        </div>
+
+        <div style="background:white;padding:30px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.05);margin:30px 0;">
+            <h3 style="color:#0F1111;margin-bottom:20px;"><i class="fas fa-headset"></i> Besoin d'aide ?</h3>
+            <p style="color:#565959;line-height:1.7;margin-bottom:15px;">Notre équipe est disponible pour vous aider avec votre abonnement :</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;">
+                <div style="background:#F8F9FA;padding:15px;border-radius:8px;">
+                    <strong style="color:#0F1111;display:block;margin-bottom:5px;">🇹🇬 Togo</strong>
+                    <span style="color:#565959;">+228 93 33 78 02</span>
+                </div>
+                <div style="background:#F8F9FA;padding:15px;border-radius:8px;">
+                    <strong style="color:#0F1111;display:block;margin-bottom:5px;">🇳🇪 Niger</strong>
+                    <span style="color:#565959;">+227 92 53 44 35</span>
+                </div>
+                <div style="background:#F8F9FA;padding:15px;border-radius:8px;">
+                    <strong style="color:#0F1111;display:block;margin-bottom:5px;">📧 Email</strong>
+                    <span style="color:#565959;">contact@mykanty.com</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

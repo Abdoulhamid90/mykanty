@@ -1,0 +1,237 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier mon profil - Dashboard Expert</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F8F9FA; }
+        .header { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 15px 0; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .back-link { color: white; text-decoration: none; font-weight: 600; }
+        
+        .form-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 2px 15px rgba(0,0,0,0.08); margin: 30px 0; }
+        .form-card h1 { font-size: 2rem; color: #0F1111; margin-bottom: 30px; }
+        
+        .section-title { font-size: 1.3rem; color: #0F1111; margin: 30px 0 20px; padding-bottom: 10px; border-bottom: 2px solid #E0E0E0; }
+        
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-group { margin-bottom: 25px; }
+        .form-group.full { grid-column: 1 / -1; }
+        .form-group label { display: block; font-weight: 600; color: #0F1111; margin-bottom: 8px; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 15px; border: 2px solid #D5D9D9; border-radius: 8px; font-size: 1rem; font-family: 'Inter', sans-serif; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #FF9933; }
+        .form-group textarea { min-height: 100px; resize: vertical; }
+        .form-group small { color: #565959; font-size: 0.85rem; margin-top: 5px; display: block; }
+        
+        .avatar-upload { display: flex; align-items: center; gap: 20px; }
+        .avatar-preview { width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, #FF9933, #006B3F); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; font-weight: 800; overflow: hidden; }
+        .avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .categories-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+        .category-item { background: #F8F9FA; padding: 12px; border-radius: 8px; border: 2px solid #D5D9D9; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s; }
+        .category-item:has(input:checked) { border-color: #006B3F; background: rgba(0,107,63,0.1); }
+        .category-item input[type="checkbox"] { width: 18px; height: 18px; }
+        
+        .availability-toggle { display: flex; align-items: center; gap: 15px; padding: 15px; background: #F8F9FA; border-radius: 8px; }
+        .toggle-switch { position: relative; width: 60px; height: 30px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #ccc; border-radius: 30px; transition: 0.3s; }
+        .toggle-slider:before { content: ""; position: absolute; height: 22px; width: 22px; left: 4px; bottom: 4px; background: white; border-radius: 50%; transition: 0.3s; }
+        .toggle-switch input:checked + .toggle-slider { background: #006B3F; }
+        .toggle-switch input:checked + .toggle-slider:before { transform: translateX(30px); }
+        
+        .actions { display: flex; gap: 15px; margin-top: 30px; }
+        .btn { padding: 12px 30px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; }
+        .btn-secondary { background: white; color: #0F1111; border: 2px solid #D5D9D9; }
+        
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <a href="{% url 'services:expert-dashboard' %}" class="back-link">
+                <i class="fas fa-arrow-left"></i> Retour au dashboard
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        {% if messages %}
+        {% for message in messages %}
+        <div style="background:{% if message.tags == 'error' %}#FFE5E5{% else %}#E8F5E9{% endif %};padding:15px;border-radius:8px;margin:20px 0;border-left:4px solid {% if message.tags == 'error' %}#C7511F{% else %}#006B3F{% endif %};">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <div class="form-card">
+            <h1><i class="fas fa-edit"></i> Modifier mon profil</h1>
+            
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <h3 class="section-title">Photo de profil</h3>
+                <div class="avatar-upload">
+                    <div class="avatar-preview">
+                        {% if expert.avatar %}
+                        <img src="{{ expert.avatar.url }}" alt="{{ expert.business_name }}">
+                        {% else %}
+                        {{ expert.business_name|slice:":1"|upper }}
+                        {% endif %}
+                    </div>
+                    <div>
+                        <input type="file" name="avatar" accept="image/*" style="font-size:0.9rem;">
+                        <small style="margin-top:5px;">JPG, PNG ou WEBP • Max 2MB</small>
+                    </div>
+                </div>
+
+                <h3 class="section-title">Informations générales</h3>
+                <div class="form-grid">
+                    <div class="form-group full">
+                        <label>Nom commercial</label>
+                        <input type="text" name="business_name" value="{{ expert.business_name }}" required>
+                    </div>
+
+                    <div class="form-group full">
+                        <label>Présentation professionnelle</label>
+                        <textarea name="bio" required>{{ expert.bio }}</textarea>
+                    </div>
+
+                    <div class="form-group full">
+                        <label>Compétences (séparées par des virgules)</label>
+                        <input type="text" name="skills" value="{{ expert.skills }}" required>
+                    </div>
+                </div>
+
+                <h3 class="section-title">Catégories de services</h3>
+                <div class="categories-grid">
+                    {% for category in categories %}
+                    <label class="category-item">
+                        <input type="checkbox" name="categories" value="{{ category.id }}" 
+                               {% if category in expert.categories.all %}checked{% endif %}>
+                        <span><i class="{{ category.icon }}"></i> {{ category.name }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+
+                <h3 class="section-title">Localisation</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Ville</label>
+                        <input type="text" name="city" value="{{ expert.city }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Pays</label>
+                        <select name="country" required>
+                            <option value="TG" {% if expert.country == 'TG' %}selected{% endif %}>🇹🇬 Togo</option>
+                            <option value="NE" {% if expert.country == 'NE' %}selected{% endif %}>🇳🇪 Niger</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full">
+                        <label>Adresse</label>
+                        <input type="text" name="address" value="{{ expert.address }}">
+                    </div>
+
+                    <div class="form-group full">
+                        <label>Zone d'intervention</label>
+                        <input type="text" name="service_zone" value="{{ expert.service_zone }}">
+                        <small>Ex: Lomé et environs (30km)</small>
+                    </div>
+                </div>
+
+                <h3 class="section-title">Contact</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Téléphone</label>
+                        <input type="tel" name="phone" value="{{ expert.phone }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>WhatsApp</label>
+                        <input type="tel" name="whatsapp" value="{{ expert.whatsapp }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" value="{{ expert.email }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Site web</label>
+                        <input type="url" name="website" value="{{ expert.website }}" placeholder="https://">
+                    </div>
+                </div>
+
+                <h3 class="section-title">Tarification</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Tarif horaire (XOF)</label>
+                        <input type="number" name="hourly_rate" value="{{ expert.hourly_rate }}" min="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Prix minimum (XOF)</label>
+                        <input type="number" name="min_price" value="{{ expert.min_price }}" min="0">
+                    </div>
+
+                    <div class="form-group full">
+                        <label>Description du tarif</label>
+                        <input type="text" name="price_description" value="{{ expert.price_description }}" placeholder="Ex: À partir de 15 000 XOF">
+                        <small>Ce texte s'affichera sur votre profil</small>
+                    </div>
+                </div>
+
+                <h3 class="section-title">Expérience</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Années d'expérience</label>
+                        <input type="number" name="years_experience" value="{{ expert.years_experience }}" min="0" max="50">
+                    </div>
+
+                    <div class="form-group full">
+                        <label>Diplômes & Certifications</label>
+                        <textarea name="certifications" rows="3">{{ expert.certifications }}</textarea>
+                    </div>
+                </div>
+
+                <h3 class="section-title">Disponibilité</h3>
+                <div class="availability-toggle">
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="is_available" {% if expert.is_available %}checked{% endif %}>
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <div>
+                        <strong style="color:#0F1111;">Je suis disponible pour de nouvelles demandes</strong>
+                        <p style="color:#565959;font-size:0.85rem;margin-top:3px;">Désactivez si vous ne souhaitez temporairement plus recevoir de demandes</p>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top:20px;">
+                    <label>Note de disponibilité (optionnel)</label>
+                    <input type="text" name="availability_note" value="{{ expert.availability_note }}" placeholder="Ex: Disponible du lundi au samedi">
+                </div>
+
+                <div class="actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Enregistrer les modifications
+                    </button>
+                    <a href="{% url 'services:expert-dashboard' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Annuler
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

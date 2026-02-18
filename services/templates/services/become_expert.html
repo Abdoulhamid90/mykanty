@@ -1,0 +1,165 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devenir Expert - My Kanty Services</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F8F9FA; }
+        .header { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 60px 0; text-align: center; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 15px; }
+        .subtitle { font-size: 1.2rem; opacity: 0.95; }
+        
+        .form-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 2px 15px rgba(0,0,0,0.08); margin: 30px 0; }
+        .form-card h2 { font-size: 1.8rem; color: #0F1111; margin-bottom: 30px; }
+        
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; font-weight: 600; color: #0F1111; margin-bottom: 8px; }
+        .form-group label .required { color: #C7511F; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 15px; border: 2px solid #D5D9D9; border-radius: 8px; font-size: 1rem; font-family: 'Inter', sans-serif; transition: border 0.2s; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #FF9933; }
+        .form-group textarea { min-height: 100px; resize: vertical; }
+        .form-group small { color: #565959; font-size: 0.85rem; margin-top: 5px; display: block; }
+        
+        .categories-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+        .category-checkbox { background: #F8F9FA; padding: 15px; border-radius: 8px; border: 2px solid #D5D9D9; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 10px; }
+        .category-checkbox:hover { border-color: #FF9933; background: rgba(255,153,51,0.1); }
+        .category-checkbox input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; }
+        .category-checkbox input[type="checkbox"]:checked + label { font-weight: 700; color: #006B3F; }
+        
+        .btn-submit { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 15px 40px; border: none; border-radius: 8px; font-weight: 700; font-size: 1.1rem; cursor: pointer; width: 100%; transition: all 0.2s; }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(255,153,51,0.4); }
+        
+        .benefits { background: linear-gradient(135deg, rgba(0,107,63,0.1), rgba(255,153,51,0.1)); padding: 30px; border-radius: 12px; margin-bottom: 30px; }
+        .benefits h3 { color: #0F1111; margin-bottom: 20px; font-size: 1.3rem; }
+        .benefits ul { list-style: none; }
+        .benefits ul li { padding: 10px 0; color: #565959; display: flex; align-items: start; gap: 10px; }
+        .benefits ul li i { color: #006B3F; margin-top: 3px; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1><i class="fas fa-rocket"></i> Devenir Expert My Kanty</h1>
+            <p class="subtitle">Développez votre activité et trouvez de nouveaux clients</p>
+        </div>
+    </header>
+
+    <div class="container">
+        {% if messages %}
+        {% for message in messages %}
+        <div style="background:{% if message.tags == 'error' %}#FFE5E5{% else %}#E8F5E9{% endif %};padding:15px;border-radius:8px;margin:20px 0;border-left:4px solid {% if message.tags == 'error' %}#C7511F{% else %}#006B3F{% endif %};">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <div class="benefits">
+            <h3><i class="fas fa-star"></i> Pourquoi rejoindre My Kanty Services ?</h3>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> <strong>Des milliers de clients potentiels</strong> au Togo & Niger cherchent vos services</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Visibilité maximale</strong> sur notre marketplace en pleine croissance</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Paiements sécurisés</strong> et transactions vérifiées</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Gestion simplifiée</strong> avec votre dashboard professionnel</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Badges de vérification</strong> pour renforcer votre crédibilité</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Support dédié</strong> pour vous accompagner dans votre croissance</li>
+            </ul>
+        </div>
+
+        <div class="form-card">
+            <h2>Créez votre profil professionnel</h2>
+            
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label>Nom commercial / Raison sociale <span class="required">*</span></label>
+                    <input type="text" name="business_name" placeholder="Ex: Électricité Pro Lomé" required maxlength="200">
+                    <small>Le nom sous lequel vous exercez votre activité</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Catégories de services <span class="required">*</span></label>
+                    <div class="categories-grid">
+                        {% for category in categories %}
+                        <label class="category-checkbox">
+                            <input type="checkbox" name="categories" value="{{ category.id }}">
+                            <span><i class="{{ category.icon }}"></i> {{ category.name }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    <small>Sélectionnez toutes les catégories correspondant à vos services</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Présentation professionnelle <span class="required">*</span></label>
+                    <textarea name="bio" placeholder="Décrivez votre expertise, vos services, votre expérience..." required></textarea>
+                    <small>Cette description apparaîtra sur votre profil public</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Compétences principales <span class="required">*</span></label>
+                    <input type="text" name="skills" placeholder="Installation électrique, Dépannage, Mise aux normes..." required>
+                    <small>Séparez vos compétences par des virgules</small>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                    <div class="form-group">
+                        <label>Ville <span class="required">*</span></label>
+                        <input type="text" name="city" placeholder="Ex: Lomé" required maxlength="100">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Pays <span class="required">*</span></label>
+                        <select name="country" required>
+                            <option value="">Sélectionnez</option>
+                            <option value="TG">🇹🇬 Togo</option>
+                            <option value="NE">🇳🇪 Niger</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Zone d'intervention</label>
+                    <input type="text" name="service_zone" placeholder="Ex: Lomé et environs (30km)" maxlength="255">
+                    <small>Où proposez-vous vos services ?</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Téléphone <span class="required">*</span></label>
+                    <input type="tel" name="phone" placeholder="+228 XX XX XX XX" required maxlength="20">
+                    <small>Les clients vous contacteront sur ce numéro</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Email professionnel <span class="required">*</span></label>
+                    <input type="email" name="email" value="{{ user.email }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Années d'expérience</label>
+                    <input type="number" name="years_experience" min="0" max="50" value="0">
+                </div>
+
+                <div style="background:#FFF9CC;padding:20px;border-radius:8px;margin:30px 0;border-left:4px solid #FF9933;">
+                    <p style="color:#0F1111;margin:0;"><i class="fas fa-info-circle"></i> <strong>Prochaine étape :</strong></p>
+                    <p style="color:#565959;margin:10px 0 0 0;">Après création de votre profil, vous devrez choisir un plan d'abonnement pour commencer à recevoir des demandes de services.</p>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-rocket"></i> Créer mon profil expert
+                </button>
+
+                <p style="text-align:center;margin-top:15px;color:#565959;font-size:0.85rem;">
+                    En créant votre profil, vous acceptez nos <a href="{% url 'legal:cgv' %}" style="color:#006B3F;">CGV</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

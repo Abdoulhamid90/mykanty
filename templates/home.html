@@ -4,723 +4,277 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Kanty - Marketplace Togo & Niger</title>
+    <title>My Kanty - Marketplace Togo & Niger | Produits & Services</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #F8F9FA; }
-
-        /* ── HEADER ── */
-        .header { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        .top-bar { background: #1a4d2e; padding: 6px 0; font-size: 0.82rem; }
-        .top-bar .tb-inner { display: flex; justify-content: space-between; align-items: center; }
-        .main-nav { padding: 10px 0; }
-        .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
-        .navbar { display: flex; justify-content: space-between; align-items: center; gap: 15px; }
-
-        /* LOGO */
-        .logo { display: flex; align-items: center; text-decoration: none; }
-        .logo img { height: 48px; width: auto; }
-
-        .search-bar { flex: 1; max-width: 550px; }
-        .search-bar form { display: flex; }
-        .search-bar input { width: 100%; padding: 11px 50px 11px 18px; border: none; border-radius: 25px 0 0 25px; font-size: 0.95rem; outline: none; }
-        .search-bar button { background: #FF9933; border: none; padding: 11px 20px; border-radius: 0 25px 25px 0; color: white; cursor: pointer; font-size: 1rem; }
-        .search-bar button:hover { background: #e08020; }
-
-        .nav-links { display: flex; gap: 5px; align-items: center; }
-        .nav-links a { color: white; text-decoration: none; padding: 8px 12px; border-radius: 6px; transition: all 0.3s; display: flex; align-items: center; gap: 6px; font-weight: 500; font-size: 0.9rem; white-space: nowrap; }
-        .nav-links a:hover { background: rgba(255,255,255,0.2); }
-        .cart-link { position: relative; }
-        .cart-count { position: absolute; top: -5px; right: -5px; background: #C7511F; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.7rem; font-weight: 700; min-width: 18px; text-align: center; display: none; }
-
-        /* ── HAMBURGER ── */
-        .hamburger { display: none; background: none; border: none; color: white; font-size: 1.6rem; cursor: pointer; padding: 8px; }
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1998; }
-        .overlay.active { display: block; }
-        .mobile-menu { position: fixed; top: 0; left: -100%; width: 82%; max-width: 320px; height: 100vh; background: white; z-index: 1999; transition: left 0.3s ease; overflow-y: auto; box-shadow: 3px 0 15px rgba(0,0,0,0.3); }
-        .mobile-menu.active { left: 0; }
-        .mm-header { background: linear-gradient(135deg, #FF9933, #006B3F); padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .mm-close { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
-        .mm-search { padding: 15px; background: #F8F9FA; }
-        .mm-search input { width: 100%; padding: 10px 15px; border: 2px solid #D5D9D9; border-radius: 25px; font-family: 'Inter', sans-serif; outline: none; }
-        .mm-links a { display: flex; align-items: center; gap: 15px; padding: 14px 20px; color: #0F1111; text-decoration: none; border-bottom: 1px solid #F0F0F0; transition: all 0.2s; font-weight: 500; }
-        .mm-links a:hover { background: #FFF9F0; color: #FF9933; }
-        .mm-links a i { width: 22px; color: #FF9933; font-size: 1rem; }
-        .mm-divider { padding: 10px 20px; background: #F8F9FA; color: #565959; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* ── HERO ── */
-        .hero { background: linear-gradient(135deg, #FF9933 0%, #006B3F 100%); color: white; padding: 70px 0; text-align: center; }
-        .hero h1 { font-size: 3rem; font-weight: 800; margin-bottom: 15px; line-height: 1.2; }
-        .hero h1 span { color: #FFD700; }
-        .hero p { font-size: 1.2rem; margin-bottom: 30px; opacity: 0.95; }
-        .hero-badges { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 35px; }
-        .badge { background: rgba(255,255,255,0.2); padding: 8px 18px; border-radius: 20px; font-size: 0.9rem; backdrop-filter: blur(5px); }
-        .hero-buttons { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
-        .btn { padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s; font-size: 1rem; }
-        .btn-white { background: white; color: #006B3F; }
-        .btn-white:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
-        .btn-gold { background: #FFD700; color: #006B3F; }
-        .btn-gold:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
-        .btn-outline { background: rgba(255,255,255,0.2); color: white; border: 2px solid rgba(255,255,255,0.5); }
-        .btn-outline:hover { background: rgba(255,255,255,0.3); }
-
-        /* ── SECTIONS ── */
-        .section-title { text-align: center; font-size: 2rem; font-weight: 800; margin: 50px 0 30px; color: #006B3F; }
-        .section-title span { color: #FF9933; }
-
-        /* ── CATÉGORIES ── */
-        .categories-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-bottom: 50px; }
-        .cat-card { background: white; border-radius: 12px; padding: 22px 15px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.07); transition: all 0.3s; text-decoration: none; color: inherit; display: block; border: 2px solid transparent; }
-        .cat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(255,153,51,0.25); border-color: #FF9933; }
-        .cat-icon { font-size: 2.2rem; margin-bottom: 10px; background: linear-gradient(135deg, #FF9933, #006B3F); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: block; }
-        .cat-name { font-weight: 600; font-size: 0.85rem; color: #0F1111; line-height: 1.3; }
-        .cat-count { font-size: 0.75rem; color: #565959; margin-top: 4px; }
-
-        /* ── PRODUITS ── */
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 22px; margin-bottom: 50px; }
-        .product-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.07); transition: all 0.3s; }
-        .product-card:hover { transform: translateY(-5px); box-shadow: 0 12px 28px rgba(0,0,0,0.15); }
-        .product-img { position: relative; padding-top: 100%; background: #F3F3F3; overflow: hidden; }
-        .product-img img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
-        .product-card:hover .product-img img { transform: scale(1.05); }
-        .no-img { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: #D5D9D9; font-size: 3rem; }
-        .product-info { padding: 16px; }
-        .product-cat { font-size: 0.75rem; color: #006B3F; font-weight: 600; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .product-name { font-weight: 600; color: #0F1111; margin-bottom: 8px; font-size: 0.95rem; line-height: 1.4; }
-        .product-seller { font-size: 0.8rem; color: #565959; margin-bottom: 10px; }
-        .product-price { font-size: 1.35rem; font-weight: 800; color: #FF9933; margin-bottom: 14px; }
-        .product-actions { display: flex; gap: 8px; }
-        .btn-cart { flex: 1; background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 10px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; transition: all 0.3s; font-size: 0.85rem; }
-        .btn-cart:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,153,51,0.4); }
-        .btn-detail { background: #F8F9FA; color: #006B3F; padding: 10px 14px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; border: 1px solid #D5D9D9; transition: all 0.3s; }
-        .btn-detail:hover { background: #006B3F; color: white; }
-
-        /* ── CONFIANCE ESCROW ── */
-        .trust-section { background: linear-gradient(135deg, rgba(255,153,51,0.06), rgba(0,107,63,0.06)); padding: 60px 0; margin: 20px 0; }
-        .trust-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; }
-        .trust-card { background: white; padding: 28px 22px; border-radius: 12px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-top: 4px solid #FF9933; transition: all 0.3s; }
-        .trust-card:hover { transform: translateY(-4px); }
-        .trust-card:nth-child(even) { border-top-color: #006B3F; }
-        .trust-icon { font-size: 2.5rem; margin-bottom: 15px; }
-        .trust-card h3 { color: #006B3F; margin-bottom: 8px; font-size: 1rem; }
-        .trust-card p { color: #565959; font-size: 0.88rem; line-height: 1.6; }
-
-        /* ── PAIEMENTS ── */
-        .payment-section { background: white; padding: 50px 0; }
-        .payment-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 30px; }
-        .payment-card { border-radius: 14px; padding: 30px; text-align: center; }
-        .payment-card.togo { background: linear-gradient(135deg, rgba(255,153,51,0.1), rgba(255,153,51,0.05)); border: 2px solid rgba(255,153,51,0.3); }
-        .payment-card.niger { background: linear-gradient(135deg, rgba(0,107,63,0.1), rgba(0,107,63,0.05)); border: 2px solid rgba(0,107,63,0.3); }
-        .payment-flag { font-size: 3rem; margin-bottom: 12px; }
-        .payment-card h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 18px; color: #0F1111; }
-        .payment-method { background: white; border-radius: 10px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
-        .payment-method i { font-size: 1.3rem; width: 28px; }
-        .payment-method .pm-info { text-align: left; }
-        .payment-method .pm-label { font-size: 0.8rem; color: #565959; }
-        .payment-method .pm-number { font-weight: 700; color: #0F1111; font-size: 0.95rem; }
-
-        /* ── À PROPOS ── */
-        .about-section { background: white; padding: 60px 0; }
-        .about-intro { max-width: 750px; margin: 0 auto 50px; text-align: center; }
-        .about-intro p { color: #565959; font-size: 1.05rem; line-height: 1.9; }
-        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-bottom: 50px; }
-        .team-card { padding: 35px; border-radius: 16px; text-align: center; transition: all 0.3s; }
-        .team-card:hover { transform: translateY(-5px); }
-        .team-card.founder { background: linear-gradient(135deg, rgba(255,153,51,0.08), rgba(0,107,63,0.08)); border: 2px solid rgba(255,153,51,0.25); }
-        .team-card.support { background: #F0F7FF; border: 2px solid rgba(0,102,204,0.15); }
-        .team-card.tech { background: #F9F0FF; border: 2px solid rgba(123,31,162,0.15); }
-        .team-avatar { width: 90px; height: 90px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-size: 2.2rem; color: white; font-weight: 800; }
-        .team-card.founder .team-avatar { background: linear-gradient(135deg, #FF9933, #006B3F); }
-        .team-card.support .team-avatar { background: linear-gradient(135deg, #0066CC, #004499); }
-        .team-card.tech .team-avatar { background: linear-gradient(135deg, #7B1FA2, #4A0072); }
-        .team-name { color: #006B3F; font-size: 1.15rem; font-weight: 700; margin-bottom: 5px; }
-        .team-role { color: #FF9933; font-weight: 600; margin-bottom: 12px; font-size: 0.9rem; }
-        .team-desc { color: #565959; font-size: 0.88rem; line-height: 1.7; margin-bottom: 15px; }
-        .team-badge { display: inline-block; padding: 5px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
-        .stats-strip { background: linear-gradient(135deg, #FF9933, #006B3F); padding: 35px; border-radius: 16px; color: white; text-align: center; }
-        .stats-strip h3 { font-size: 1.3rem; margin-bottom: 25px; font-weight: 800; }
-        .stats-strip-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 20px; }
-        .stat-item .val { font-size: 2.2rem; font-weight: 800; color: #FFD700; }
-        .stat-item .lbl { opacity: 0.9; font-size: 0.88rem; margin-top: 3px; }
-
-        /* ── FOOTER ── */
-        .footer { background: linear-gradient(135deg, #1a1a1a, #006B3F); color: white; padding: 55px 0 0; }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-bottom: 40px; }
-        .footer-logo img { height: 55px; width: auto; margin-bottom: 15px; display: block; }
-        .footer p { color: rgba(255,255,255,0.75); line-height: 1.7; font-size: 0.9rem; margin-bottom: 8px; }
-        .footer h4 { color: #FFD700; margin-bottom: 18px; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; }
-        .footer-links a { display: block; color: rgba(255,255,255,0.8); text-decoration: none; margin-bottom: 10px; font-size: 0.9rem; transition: all 0.2s; }
-        .footer-links a:hover { color: #FF9933; padding-left: 5px; }
-        .footer-contact p { display: flex; align-items: flex-start; gap: 10px; color: rgba(255,255,255,0.8); font-size: 0.88rem; }
-        .footer-contact p i { color: #FF9933; margin-top: 3px; width: 16px; flex-shrink: 0; }
-        .pay-box { margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.08); border-radius: 10px; font-size: 0.83rem; }
-        .pay-box strong { color: #FFD700; display: block; margin-bottom: 6px; }
-        .pay-box span { color: rgba(255,255,255,0.85); line-height: 1.8; }
-        .footer-bottom { border-top: 1px solid rgba(255,255,255,0.15); padding: 20px 0; }
-        .footer-bottom-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
-        .footer-legal-links { display: flex; gap: 20px; flex-wrap: wrap; }
-        .footer-legal-links a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
-        .footer-legal-links a:hover { color: #FFD700; }
-
-        /* ── NOTIFICATION ── */
-        .notification { position: fixed; top: 80px; right: 20px; background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 14px 22px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); z-index: 9999; font-weight: 600; display: none; max-width: 300px; }
-
-        /* ── RESPONSIVE ── */
+        
+        /* Header */
+        .header { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 15px 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: white; text-decoration: none; }
+        .nav-links { display: flex; gap: 25px; align-items: center; }
+        .nav-links a { color: white; text-decoration: none; font-weight: 600; transition: opacity 0.2s; }
+        .nav-links a:hover { opacity: 0.8; }
+        
+        /* Hero Section */
+        .hero { background: linear-gradient(135deg, #FF9933, #006B3F); color: white; padding: 80px 0; text-align: center; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M0,0 Q300,50 600,30 T1200,0 L1200,120 L0,120 Z" fill="rgba(255,255,255,0.05)"/></svg>') repeat-x bottom; opacity: 0.3; }
+        .hero-content { position: relative; z-index: 1; }
+        .hero h1 { font-size: 3rem; font-weight: 800; margin-bottom: 20px; }
+        .hero p { font-size: 1.3rem; margin-bottom: 40px; opacity: 0.95; }
+        .hero-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+        .btn { padding: 15px 35px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 1.1rem; transition: all 0.2s; display: inline-flex; align-items: center; gap: 10px; }
+        .btn-primary { background: white; color: #006B3F; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(255,255,255,0.3); }
+        .btn-secondary { background: rgba(255,255,255,0.2); color: white; border: 2px solid white; }
+        .btn-secondary:hover { background: white; color: #006B3F; }
+        
+        /* Quick Access Cards */
+        .quick-access { margin: -50px 0 50px; position: relative; z-index: 2; }
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .access-card { background: white; padding: 35px 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); text-align: center; transition: all 0.3s; text-decoration: none; color: inherit; }
+        .access-card:hover { transform: translateY(-10px); box-shadow: 0 8px 30px rgba(0,0,0,0.15); }
+        .access-card .icon { width: 80px; height: 80px; margin: 0 auto 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+        .access-card.products .icon { background: linear-gradient(135deg, rgba(255,153,51,0.2), rgba(255,153,51,0.3)); color: #FF9933; }
+        .access-card.services .icon { background: linear-gradient(135deg, rgba(0,107,63,0.2), rgba(0,107,63,0.3)); color: #006B3F; }
+        .access-card.sell .icon { background: linear-gradient(135deg, rgba(199,81,31,0.2), rgba(199,81,31,0.3)); color: #C7511F; }
+        .access-card h3 { font-size: 1.4rem; color: #0F1111; margin-bottom: 10px; }
+        .access-card p { color: #565959; line-height: 1.6; }
+        
+        /* Stats Section */
+        .stats { background: white; padding: 60px 0; margin: 50px 0; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; text-align: center; }
+        .stat-item { }
+        .stat-item .number { font-size: 3rem; font-weight: 800; color: #FF9933; margin-bottom: 10px; }
+        .stat-item .label { color: #565959; font-size: 1.1rem; }
+        
+        /* Features Section */
+        .features { margin: 80px 0; }
+        .section-title { text-align: center; font-size: 2.5rem; color: #0F1111; margin-bottom: 50px; font-weight: 800; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .feature-card { background: white; padding: 35px; border-radius: 12px; box-shadow: 0 2px 15px rgba(0,0,0,0.05); }
+        .feature-card .icon { font-size: 2.5rem; color: #FF9933; margin-bottom: 20px; }
+        .feature-card h3 { font-size: 1.3rem; color: #0F1111; margin-bottom: 15px; }
+        .feature-card p { color: #565959; line-height: 1.7; }
+        
+        /* CTA Section */
+        .cta { background: linear-gradient(135deg, #006B3F, #FF9933); color: white; padding: 80px 0; text-align: center; margin: 80px 0 0; }
+        .cta h2 { font-size: 2.5rem; margin-bottom: 20px; font-weight: 800; }
+        .cta p { font-size: 1.2rem; margin-bottom: 40px; opacity: 0.95; }
+        
+        /* Footer */
+        .footer { background: #1a1a1a; color: white; padding: 50px 0 20px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 40px; }
+        .footer h4 { margin-bottom: 20px; font-size: 1.1rem; }
+        .footer ul { list-style: none; }
+        .footer ul li { margin-bottom: 10px; }
+        .footer ul li a { color: rgba(255,255,255,0.7); text-decoration: none; }
+        .footer ul li a:hover { color: white; }
+        .footer-bottom { text-align: center; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); }
+        
         @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
             .nav-links { display: none; }
-            .hamburger { display: block; }
-            .search-bar { display: none; }
-            .hero h1 { font-size: 1.9rem; }
-            .hero p { font-size: 1rem; }
-            .section-title { font-size: 1.5rem; }
-            .categories-grid { grid-template-columns: repeat(3, 1fr); }
-            .footer-bottom-inner { flex-direction: column; text-align: center; }
-            .hero-buttons { flex-direction: column; align-items: center; }
-        }
-        @media (max-width: 480px) {
-            .categories-grid { grid-template-columns: repeat(2, 1fr); }
+            .cards-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-
-<!-- OVERLAY MENU MOBILE -->
-<div class="overlay" id="overlay" onclick="closeMobileMenu()"></div>
-
-<!-- MENU MOBILE -->
-<div class="mobile-menu" id="mobile-menu">
-    <div class="mm-header">
-        <img src="{% static 'images/logo.png' %}" alt="My Kanty" style="height: 38px; width: auto;">
-        <button class="mm-close" onclick="closeMobileMenu()"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="mm-search">
-        <form action="{% url 'products:product-list' %}" method="GET">
-            <input type="text" name="q" placeholder="Rechercher des produits...">
-        </form>
-    </div>
-    <div class="mm-links">
-        <a href="{% url 'home' %}"><i class="fas fa-home"></i> Accueil</a>
-        <a href="{% url 'products:product-list' %}"><i class="fas fa-th-large"></i> Tous les produits</a>
-        <a href="{% url 'orders:cart' %}"><i class="fas fa-shopping-cart"></i> Mon panier</a>
-
-        <div class="mm-divider">Mon compte</div>
-        {% if user.is_authenticated %}
-            <a href="{% url 'accounts:dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            {% if user.is_seller %}
-            <a href="{% url 'orders:seller-orders' %}"><i class="fas fa-store"></i> Mes ventes</a>
-            <a href="{% url 'accounts:seller-reports' %}"><i class="fas fa-chart-bar"></i> Mes rapports</a>
-            {% else %}
-            <a href="{% url 'orders:my-orders' %}"><i class="fas fa-box"></i> Mes commandes</a>
-            <a href="{% url 'accounts:become-seller' %}"><i class="fas fa-briefcase"></i> Devenir vendeur</a>
-            {% endif %}
-            <a href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
-        {% else %}
-            <a href="{% url 'accounts:login' %}"><i class="fas fa-sign-in-alt"></i> Connexion</a>
-            <a href="{% url 'accounts:register' %}"><i class="fas fa-user-plus"></i> Inscription</a>
-            <a href="{% url 'accounts:become-seller' %}"><i class="fas fa-briefcase"></i> Devenir vendeur</a>
-        {% endif %}
-
-        <div class="mm-divider">Informations légales</div>
-        <a href="{% url 'legal:cgv' %}"><i class="fas fa-file-contract"></i> CGV</a>
-        <a href="{% url 'legal:privacy' %}"><i class="fas fa-shield-alt"></i> Confidentialité</a>
-        <a href="{% url 'legal:escrow-guide' %}"><i class="fas fa-lock"></i> Guide Escrow</a>
-        <a href="{% url 'legal:mentions' %}"><i class="fas fa-balance-scale"></i> Mentions légales</a>
-    </div>
-</div>
-
-<!-- ══════════════════ HEADER ══════════════════ -->
-<header class="header">
-    <div class="top-bar">
-        <div class="container">
-            <div class="tb-inner">
-                <span><i class="fas fa-map-marker-alt"></i> Livraison au Togo 🇹🇬 & Niger 🇳🇪</span>
-                <span><i class="fas fa-headset"></i> +228 93 33 78 02</span>
-            </div>
-        </div>
-    </div>
-    <div class="main-nav">
+    <!-- Header -->
+    <header class="header">
         <div class="container">
             <nav class="navbar">
-                <button class="hamburger" onclick="openMobileMenu()">
-                    <i class="fas fa-bars"></i>
-                </button>
-
                 <a href="{% url 'home' %}" class="logo">
-                    <img src="{% static 'images/logo.png' %}" alt="My Kanty">
+                    <i class="fas fa-shopping-bag"></i> My Kanty
                 </a>
-
-                <div class="search-bar">
-                    <form action="{% url 'products:product-list' %}" method="GET">
-                        <input type="text" name="q" placeholder="Rechercher des produits, catégories...">
-                        <button type="submit"><i class="fas fa-search"></i></button>
-                    </form>
-                </div>
-
                 <div class="nav-links">
-                    <a href="{% url 'products:product-list' %}"><i class="fas fa-th-large"></i> Produits</a>
+                    <a href="{% url 'products:product-list' %}"><i class="fas fa-box"></i> Produits</a>
+                    <a href="{% url 'services:experts-directory' %}"><i class="fas fa-briefcase"></i> Services</a>
                     {% if user.is_authenticated %}
-                        <a href="{% url 'accounts:dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                        {% if user.is_seller %}
-                        <a href="{% url 'orders:seller-orders' %}"><i class="fas fa-store"></i> Mes ventes</a>
-                        {% else %}
-                        <a href="{% url 'orders:my-orders' %}"><i class="fas fa-box"></i> Commandes</a>
-                        {% endif %}
-                        <a href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+                        <a href="{% url 'accounts:dashboard' %}"><i class="fas fa-user"></i> Mon Compte</a>
                     {% else %}
-                        <a href="{% url 'accounts:register' %}"><i class="fas fa-user-plus"></i> S'inscrire</a>
                         <a href="{% url 'accounts:login' %}"><i class="fas fa-sign-in-alt"></i> Connexion</a>
                     {% endif %}
-                    <a href="{% url 'orders:cart' %}" class="cart-link">
-                        <i class="fas fa-shopping-cart"></i> Panier
-                        <span id="cart-count" class="cart-count">0</span>
-                    </a>
                 </div>
             </nav>
         </div>
-    </div>
-</header>
+    </header>
 
-<!-- ══════════════════ HERO ══════════════════ -->
-<section class="hero">
-    <div class="container">
-        <h1>Achetez et Vendez<br><span>en toute confiance</span></h1>
-        <p>La marketplace sécurisée du Togo et du Niger</p>
-        <div class="hero-badges">
-            <span class="badge"><i class="fas fa-lock"></i> Paiement Escrow sécurisé</span>
-            <span class="badge"><i class="fas fa-truck"></i> Livraison rapide</span>
-            <span class="badge"><i class="fas fa-shield-alt"></i> Protection acheteur</span>
-            <span class="badge"><i class="fas fa-percent"></i> Commission 5% seulement</span>
-        </div>
-        <div class="hero-buttons">
-            {% if user.is_authenticated %}
-            <a href="{% url 'accounts:dashboard' %}" class="btn btn-white">
-                <i class="fas fa-tachometer-alt"></i> Mon Dashboard
-            </a>
-            {% else %}
-            <a href="{% url 'accounts:register' %}" class="btn btn-white">
-                <i class="fas fa-rocket"></i> Commencer maintenant
-            </a>
-            {% endif %}
-            <a href="{% url 'accounts:become-seller' %}" class="btn btn-gold">
-                <i class="fas fa-store"></i> Devenir Vendeur
-            </a>
-            <a href="{% url 'products:product-list' %}" class="btn btn-outline">
-                <i class="fas fa-th-large"></i> Voir les produits
-            </a>
-        </div>
-    </div>
-</section>
-
-<!-- ══════════════════ CONTENU PRINCIPAL ══════════════════ -->
-<div class="container">
-
-    <!-- CATÉGORIES DYNAMIQUES -->
-    <h2 class="section-title">🏷️ Catégories <span>Populaires</span></h2>
-    <div class="categories-grid">
-        {% for category in categories %}
-        <a href="{% url 'products:product-list' %}?category={{ category.id }}" class="cat-card">
-            <i class="fas fa-{{ category.icon }} cat-icon"></i>
-            <div class="cat-name">{{ category.name }}</div>
-            <div class="cat-count">{{ category.products.count }} produit{{ category.products.count|pluralize }}</div>
-        </a>
-        {% empty %}
-        <!-- Fallback si base vide -->
-        <a href="{% url 'products:product-list' %}" class="cat-card">
-        <i class="fas fa-laptop cat-icon"></i><div class="cat-name">Électronique</div>
-        </a>
-        <a href="{% url 'products:product-list' %}" class="cat-card">
-        <i class="fas fa-tshirt cat-icon"></i><div class="cat-name">Mode</div>
-        </a>
-        <a href="{% url 'products:product-list' %}" class="cat-card">
-        <i class="fas fa-home cat-icon"></i><div class="cat-name">Maison</div>
-        </a>
-        <a href="{% url 'products:product-list' %}" class="cat-card">
-        <i class="fas fa-spa cat-icon"></i><div class="cat-name">Beauté</div>
-        </a>
-        <a href="{% url 'products:product-list' %}" class="cat-card">
-        <i class="fas fa-utensils cat-icon"></i><div class="cat-name">Alimentation</div>
-        </a>
-        <a href="{% url 'products:product-list' %}" class="cat-card">
-        <i class="fas fa-futbol cat-icon"></i><div class="cat-name">Sport</div>
-        </a>
-        <a href="{% url 'products:product-list' %}" class="cat-card">
-        <i class="fas fa-book cat-icon"></i><div class="cat-name">Livres</div>
-        </a>
-        <a href="{% url 'products:product-list' %}" class="cat-card">
-        <i class="fas fa-car cat-icon"></i><div class="cat-name">Auto & Moto</div>
-        </a>
-        <a href="{% url 'products:product-list' %}" class="cat-card">
-        <i class="fas fa-baby cat-icon"></i><div class="cat-name">Bébé</div>
-        </a>    
-        <a href="{% url 'products:product-list' %}" class="cat-card">
-        <i class="fas fa-tools cat-icon"></i><div class="cat-name">Bricolage</div>
-        </a>
-        <a href="{% url 'products:product-list' %}" class="cat-card">
-        <i class="fas fa-seedling cat-icon"></i><div class="cat-name">Agriculture</div>
-        </a>
-        <a href="{% url 'products:product-list' %}" class="cat-card">
-        <i class="fas fa-mobile-alt cat-icon"></i><div class="cat-name">Téléphonie</div>
-        </a>
-        {% endfor %}
-    </div>
-
-    <!-- PRODUITS EN VEDETTE -->
-    <h2 class="section-title">⭐ Produits en <span>Vedette</span></h2>
-    <div class="products-grid">
-        {% for product in featured_products %}
-        <div class="product-card">
-            <div class="product-img">
-                {% if product.main_image %}
-                <img src="{{ product.main_image.url }}" alt="{{ product.name }}" loading="lazy">
-                {% else %}
-                <i class="fas fa-image no-img"></i>
-                {% endif %}
-            </div>
-            <div class="product-info">
-                {% if product.category %}
-                <div class="product-cat">{{ product.category.name }}</div>
-                {% endif %}
-                <div class="product-name">{{ product.name|truncatewords:6 }}</div>
-                <div class="product-seller"><i class="fas fa-store"></i> {{ product.seller.username }}</div>
-                <div class="product-price">{{ product.get_price|floatformat:0 }} XOF</div>
-                <div class="product-actions">
-                    <button class="btn-cart" onclick="addToCart({{ product.id }}, '{{ product.name|escapejs }}', {{ product.get_price }}, '{% if product.main_image %}{{ product.main_image.url }}{% endif %}')">
-                        <i class="fas fa-cart-plus"></i> Panier
-                    </button>
-                    <a href="{% url 'products:product-detail' product.id %}" class="btn-detail">
-                        <i class="fas fa-eye"></i>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="container">
+                <h1>🇹🇬 My Kanty 🇳🇪</h1>
+                <p>La marketplace n°1 au Togo & Niger pour acheter, vendre et trouver des experts</p>
+                <div class="hero-buttons">
+                    <a href="{% url 'products:product-list' %}" class="btn btn-primary">
+                        <i class="fas fa-shopping-cart"></i> Acheter des Produits
+                    </a>
+                    <a href="{% url 'services:experts-directory' %}" class="btn btn-secondary">
+                        <i class="fas fa-search"></i> Trouver un Expert
                     </a>
                 </div>
             </div>
         </div>
-        {% empty %}
-        <div style="grid-column:1/-1; text-align:center; padding:50px; color:#565959; background:white; border-radius:12px;">
-            <i class="fas fa-box-open" style="font-size:3rem; color:#D5D9D9; display:block; margin-bottom:15px;"></i>
-            <h3>Aucun produit disponible pour le moment</h3>
-            {% if user.is_authenticated and user.is_seller %}
-            <a href="/admin/products/product/add/" style="display:inline-block; margin-top:15px; background:linear-gradient(135deg,#FF9933,#006B3F); color:white; padding:12px 25px; border-radius:8px; text-decoration:none; font-weight:600;">
-                <i class="fas fa-plus"></i> Ajouter un produit
-            </a>
-            {% endif %}
-        </div>
-        {% endfor %}
-    </div>
-</div>
+    </section>
 
-<!-- ══════════════════ CONFIANCE ESCROW ══════════════════ -->
-<div class="trust-section">
-    <div class="container">
-        <h2 class="section-title">🔐 Pourquoi choisir <span>My Kanty ?</span></h2>
-        <div class="trust-grid">
-            <div class="trust-card">
-                <div class="trust-icon">🔐</div>
-                <h3>Paiement Escrow Sécurisé</h3>
-                <p>Le paiement est bloqué sur la plateforme. Le vendeur est payé uniquement après confirmation de la livraison.</p>
-            </div>
-            <div class="trust-card">
-                <div class="trust-icon">📱</div>
-                <h3>Mixx / Tmoney & Nita</h3>
-                <p>Payez via Mixx/Tmoney au Togo ou Mobile Money au Niger. Transfert Nita aussi accepté.</p>
-            </div>
-            <div class="trust-card">
-                <div class="trust-icon">✅</div>
-                <h3>Vendeurs Vérifiés</h3>
-                <p>Tous les vendeurs sont vérifiés et approuvés par notre équipe avant de pouvoir publier des produits.</p>
-            </div>
-            <div class="trust-card">
-                <div class="trust-icon">🚚</div>
-                <h3>Livraison Garantie</h3>
-                <p>Votre argent est protégé jusqu'à la réception. Remboursement garanti si le produit n'arrive pas.</p>
-            </div>
-            <div class="trust-card">
-                <div class="trust-icon">💰</div>
-                <h3>Commission 5% Seulement</h3>
-                <p>Les vendeurs gardent 95% de leurs ventes. La commission couvre la sécurité Escrow et le support.</p>
-            </div>
-            <div class="trust-card">
-                <div class="trust-icon">🤝</div>
-                <h3>Support 7j/7</h3>
-                <p>Notre équipe est disponible pour résoudre tout litige entre acheteurs et vendeurs rapidement.</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ══════════════════ PAIEMENTS ACCEPTÉS ══════════════════ -->
-<section class="payment-section">
-    <div class="container">
-        <h2 class="section-title">💳 Modes de <span>Paiement</span></h2>
-        <p style="text-align:center; color:#565959; margin-top:-15px; margin-bottom:10px;">
-            Votre argent est sécurisé par le système Escrow — le vendeur est payé après livraison confirmée.
-        </p>
-        <div class="payment-grid">
-
-            <!-- TOGO -->
-            <div class="payment-card togo">
-                <div class="payment-flag">🇹🇬</div>
-                <h3>Togo</h3>
-                <div class="payment-method">
-                    <i class="fas fa-mobile-alt" style="color:#FF9933;"></i>
-                    <div class="pm-info">
-                        <div class="pm-label">📱 Mixx / Tmoney</div>
-                        <div class="pm-number">+228 72 22 23 72</div>
-                    </div>
-                </div>
-                <div class="payment-method">
-                    <i class="fas fa-university" style="color:#006B3F;"></i>
-                    <div class="pm-info">
-                        <div class="pm-label">🏦 Nita (dépôt bancaire)</div>
-                        <div class="pm-number">+228 72 22 23 72</div>
-                    </div>
-                </div>
-                <div style="background:rgba(255,153,51,0.1); padding:10px 14px; border-radius:8px; font-size:0.82rem; color:#565959; text-align:left;">
-                    <i class="fas fa-info-circle" style="color:#FF9933;"></i>
-                    Envoyez le paiement puis soumettez votre référence de transaction.
-                </div>
-            </div>
-
-            <!-- NIGER -->
-            <div class="payment-card niger">
-                <div class="payment-flag">🇳🇪</div>
-                <h3>Niger</h3>
-                <div class="payment-method">
-                    <i class="fas fa-mobile-alt" style="color:#006B3F;"></i>
-                    <div class="pm-info">
-                        <div class="pm-label">📱 Mobile Money</div>
-                        <div class="pm-number">+227 92 53 44 35</div>
-                    </div>
-                </div>
-                <div class="payment-method">
-                    <i class="fas fa-university" style="color:#FF9933;"></i>
-                    <div class="pm-info">
-                        <div class="pm-label">🏦 Nita (dépôt bancaire)</div>
-                        <div class="pm-number">+227 92 53 44 35</div>
-                    </div>
-                </div>
-                <div style="background:rgba(0,107,63,0.08); padding:10px 14px; border-radius:8px; font-size:0.82rem; color:#565959; text-align:left;">
-                    <i class="fas fa-info-circle" style="color:#006B3F;"></i>
-                    Envoyez le paiement puis soumettez votre référence de transaction.
-                </div>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-<!-- ══════════════════ À PROPOS ══════════════════ -->
-<section class="about-section">
-    <div class="container">
-        <h2 class="section-title">👥 À Propos de <span>My Kanty</span></h2>
-
-        <div class="about-intro">
-            <img src="{% static 'images/logo.png' %}" alt="My Kanty" style="height:70px; margin-bottom:20px;">
-            <p>
-                <strong style="color:#006B3F;">My Kanty</strong> est une marketplace de confiance fondée pour
-                révolutionner le commerce en ligne au <strong>Togo</strong> et au <strong>Niger</strong>.
-                Notre mission : permettre à chacun d'acheter et vendre en toute sécurité grâce
-                à notre système de paiement <strong>Escrow</strong> unique en Afrique de l'Ouest.
-            </p>
-        </div>
-
-        <div class="team-grid">
-
-            <!-- FONDATEUR -->
-            <div class="team-card founder">
-                <div class="team-avatar">A</div>
-                <div class="team-name">Abdoul-Hamid Mohamed</div>
-                <div class="team-role">🎯 Fondateur & Directeur Général</div>
-                <p class="team-desc">
-                    Entrepreneur visionnaire passionné par le commerce digital en Afrique de l'Ouest.
-                    Abdoul-Hamid a créé My Kanty pour offrir une plateforme sécurisée, accessible
-                    et parfaitement adaptée aux réalités du Togo et du Niger.
-                </p>
-                <a href="https://wa.me/22893337802" target="_blank" style="display:inline-flex; align-items:center; gap:8px; background:#25D366; color:white; padding:8px 18px; border-radius:20px; text-decoration:none; font-size:0.85rem; font-weight:600;">
-                    <i class="fab fa-whatsapp"></i> Contacter sur WhatsApp
+    <!-- Quick Access Cards -->
+    <section class="quick-access">
+        <div class="container">
+            <div class="cards-grid">
+                <a href="{% url 'products:product-list' %}" class="access-card products">
+                    <div class="icon"><i class="fas fa-box-open"></i></div>
+                    <h3>Acheter des Produits</h3>
+                    <p>Des milliers de produits authentiques avec paiement sécurisé Escrow 3%</p>
+                </a>
+                
+                <a href="{% url 'services:experts-directory' %}" class="access-card services">
+                    <div class="icon"><i class="fas fa-users"></i></div>
+                    <h3>Trouver un Expert</h3>
+                    <p>Plombiers, électriciens, développeurs, et plus encore. Professionnels vérifiés.</p>
+                </a>
+                
+                <a href="{% url 'accounts:become-seller' %}" class="access-card sell">
+                    <div class="icon"><i class="fas fa-store"></i></div>
+                    <h3>Vendre & Gagner</h3>
+                    <p>Vendez vos produits ou proposez vos services. Commission à partir de 3%.</p>
                 </a>
             </div>
-
-            <!-- SUPPORT -->
-            <div class="team-card support">
-                <div class="team-avatar"><i class="fas fa-headset"></i></div>
-                <div class="team-name">Équipe Support</div>
-                <div class="team-role">📞 Service Client</div>
-                <p class="team-desc">
-                    Notre équipe dédiée est disponible pour vous accompagner, résoudre vos litiges
-                    et vous guider à chaque étape de votre expérience sur My Kanty.
-                </p>
-                <span class="team-badge" style="background:#E3F2FD; color:#0066CC;">
-                    <i class="fas fa-clock"></i> Lun-Sam : 8h - 18h
-                </span>
-            </div>
-
-            <!-- TECHNIQUE -->
-            <div class="team-card tech">
-                <div class="team-avatar"><i class="fas fa-laptop-code"></i></div>
-                <div class="team-name">Équipe Technique</div>
-                <div class="team-role">💻 Développement & Sécurité</div>
-                <p class="team-desc">
-                    Notre équipe technique assure la sécurité, la performance et l'évolution
-                    continue de la plateforme pour vous offrir la meilleure expérience possible.
-                </p>
-                <span class="team-badge" style="background:#F3E5F5; color:#7B1FA2;">
-                    <i class="fas fa-shield-alt"></i> Disponible 24h/24
-                </span>
-            </div>
         </div>
+    </section>
 
-        <!-- CHIFFRES CLÉS -->
-        <div class="stats-strip">
-            <h3>My Kanty en chiffres</h3>
-            <div class="stats-strip-grid">
-                <div class="stat-item"><div class="val">2</div><div class="lbl">Pays couverts</div></div>
-                <div class="stat-item"><div class="val">18</div><div class="lbl">Catégories</div></div>
-                <div class="stat-item"><div class="val">5%</div><div class="lbl">Commission seulement</div></div>
-                <div class="stat-item"><div class="val">100%</div><div class="lbl">Paiements sécurisés</div></div>
-                <div class="stat-item"><div class="val">24h</div><div class="lbl">Délai libération fonds</div></div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ══════════════════ FOOTER ══════════════════ -->
-<footer class="footer">
-    <div class="container">
-        <div class="footer-grid">
-
-            <!-- À propos -->
-            <div>
-                <div class="footer-logo">
-                    <img src="{% static 'images/logo.png' %}" alt="My Kanty">
+    <!-- Stats -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="number">50+</div>
+                    <div class="label">Produits en vente</div>
                 </div>
-                <p>Votre marketplace de confiance au Togo et au Niger. Achetez et vendez en toute sécurité grâce à notre système Escrow.</p>
-                <p style="margin-top:12px;">
-                    <a href="{% url 'legal:escrow-guide' %}" style="color:#FFD700; text-decoration:none;">
-                        <i class="fas fa-lock"></i> Comment fonctionne l'Escrow ?
-                    </a>
-                </p>
-                <p style="margin-top:8px; font-size:0.85rem; color:rgba(255,255,255,0.6);">
-                    Fondateur : <strong style="color:rgba(255,255,255,0.9);">Abdoul-Hamid Mohamed</strong>
-                </p>
-            </div>
-
-            <!-- Liens rapides -->
-            <div>
-                <h4>Liens Rapides</h4>
-                <div class="footer-links">
-                    <a href="{% url 'products:product-list' %}"><i class="fas fa-th-large"></i> Tous les produits</a>
-                    <a href="{% url 'accounts:become-seller' %}"><i class="fas fa-store"></i> Devenir vendeur</a>
-                    <a href="{% url 'accounts:register' %}"><i class="fas fa-user-plus"></i> Créer un compte</a>
-                    <a href="{% url 'orders:cart' %}"><i class="fas fa-shopping-cart"></i> Mon panier</a>
-                    {% if user.is_authenticated %}
-                    <a href="{% url 'accounts:dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                    {% endif %}
+                <div class="stat-item">
+                    <div class="number">100%</div>
+                    <div class="label">Paiements sécurisés</div>
                 </div>
-            </div>
-
-            <!-- Informations légales -->
-            <div>
-                <h4>Informations Légales</h4>
-                <div class="footer-links">
-                    <a href="{% url 'legal:cgv' %}"><i class="fas fa-file-contract"></i> Conditions Générales de Vente</a>
-                    <a href="{% url 'legal:privacy' %}"><i class="fas fa-shield-alt"></i> Politique de Confidentialité</a>
-                    <a href="{% url 'legal:mentions' %}"><i class="fas fa-balance-scale"></i> Mentions Légales</a>
-                    <a href="{% url 'legal:escrow-guide' %}"><i class="fas fa-lock"></i> Guide du Système Escrow</a>
+                <div class="stat-item">
+                    <div class="number">2</div>
+                    <div class="label">Pays (Togo & Niger)</div>
                 </div>
-            </div>
-
-            <!-- Contact + Paiements -->
-            <div>
-                <h4>Contact</h4>
-                <div class="footer-contact">
-                    <p><i class="fas fa-envelope"></i> Abdoul.mohammed91@gmail.com</p>
-                    <p><i class="fas fa-phone"></i> +228 93 33 78 02 (Togo)</p>
-                    <p><i class="fas fa-phone"></i> +227 92 53 44 35 (Niger)</p>
-                    <p><i class="fab fa-whatsapp"></i> +228 93 33 78 02</p>
-                    <p><i class="fas fa-map-marker-alt"></i> Lomé, Togo</p>
-                    <p><i class="fas fa-clock"></i> Lun-Sam : 8h - 18h</p>
-                </div>
-
-                <div class="pay-box">
-                    <strong>💰 Paiements — TOGO 🇹🇬</strong>
-                    <span>📱 Mixx/Tmoney : <strong>+228 72 22 23 72</strong><br>🏦 Nita (dépôt) : <strong>+228 72 22 23 72</strong></span>
-                </div>
-                <div class="pay-box" style="margin-top:8px;">
-                    <strong>💰 Paiements — NIGER 🇳🇪</strong>
-                    <span>📱 Mobile Money : <strong>+227 92 53 44 35</strong><br>🏦 Nita (dépôt) : <strong>+227 92 53 44 35</strong></span>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Footer bottom -->
-        <div class="footer-bottom">
-            <div class="footer-bottom-inner">
-                <p style="color:rgba(255,255,255,0.7); font-size:0.88rem;">
-                    &copy; 2026 My Kanty — Fondé par Abdoul-Hamid Mohamed | Togo 🇹🇬 & Niger 🇳🇪
-                </p>
-                <div class="footer-legal-links">
-                    <a href="{% url 'legal:cgv' %}">CGV</a>
-                    <a href="{% url 'legal:privacy' %}">Confidentialité</a>
-                    <a href="{% url 'legal:mentions' %}">Mentions légales</a>
-                    <a href="{% url 'legal:escrow-guide' %}">Guide Escrow</a>
+                <div class="stat-item">
+                    <div class="number">3%</div>
+                    <div class="label">Commission seulement</div>
                 </div>
             </div>
         </div>
-    </div>
-</footer>
+    </section>
 
-<!-- NOTIFICATION -->
-<div class="notification" id="notification"></div>
+    <!-- Features -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Pourquoi choisir My Kanty ?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Paiements 100% Sécurisés</h3>
+                    <p>Système Escrow : votre argent est protégé jusqu'à réception de votre commande.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="icon"><i class="fas fa-medal"></i></div>
+                    <h3>Experts Vérifiés</h3>
+                    <p>Tous nos professionnels sont vérifiés et notés par la communauté.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="icon"><i class="fas fa-mobile-alt"></i></div>
+                    <h3>Paiement Mobile Money</h3>
+                    <p>Mixx, Tmoney, Nita - payez facilement avec votre téléphone.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="icon"><i class="fas fa-truck"></i></div>
+                    <h3>Livraison Fiable</h3>
+                    <p>Partenaires de livraison de confiance partout au Togo et Niger.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="icon"><i class="fas fa-headset"></i></div>
+                    <h3>Support 24/7</h3>
+                    <p>Notre équipe est disponible pour vous aider à tout moment.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="icon"><i class="fas fa-percent"></i></div>
+                    <h3>Commission Minimale</h3>
+                    <p>Seulement 3% de commission sur les ventes. La plus basse du marché !</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-{% include 'includes/chatbot.html' %}
+    <!-- CTA -->
+    <section class="cta">
+        <div class="container">
+            <h2>Prêt à commencer ?</h2>
+            <p>Rejoignez des milliers d'utilisateurs satisfaits au Togo et au Niger</p>
+            <div class="hero-buttons">
+                <a href="{% url 'accounts:register' %}" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> Créer un Compte
+                </a>
+                <a href="{% url 'services:become-expert' %}" class="btn btn-secondary">
+                    <i class="fas fa-briefcase"></i> Devenir Expert
+                </a>
+            </div>
+        </div>
+    </section>
 
-<script>
-    // ── MENU MOBILE ──
-    function openMobileMenu() {
-        document.getElementById('mobile-menu').classList.add('active');
-        document.getElementById('overlay').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    function closeMobileMenu() {
-        document.getElementById('mobile-menu').classList.remove('active');
-        document.getElementById('overlay').classList.remove('active');
-        document.body.style.overflow = '';
-    }
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMobileMenu(); });
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h4><i class="fas fa-shopping-bag"></i> My Kanty</h4>
+                    <p style="color:rgba(255,255,255,0.7);">La marketplace de confiance au Togo & Niger</p>
+                </div>
+                
+                <div>
+                    <h4>Produits</h4>
+                    <ul>
+                        <li><a href="{% url 'products:product-list' %}">Tous les produits</a></li>
+                        <li><a href="{% url 'accounts:become-seller' %}">Devenir vendeur</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="{% url 'services:experts-directory' %}">Trouver un expert</a></li>
+                        <li><a href="{% url 'services:become-expert' %}">Devenir expert</a></li>
+                        <li><a href="{% url 'services:subscription-plans' %}">Plans & Tarifs</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4>Contact</h4>
+                    <ul>
+                        <li>🇹🇬 Togo: +228 93 33 78 02</li>
+                        <li>🇳🇪 Niger: +227 92 53 44 35</li>
+                        <li>📧 Abdoul.mohammed91@gmail.com</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 My Kanty. Tous droits réservés. | 
+                <a href="{% url 'legal:cgv' %}" style="color:rgba(255,255,255,0.6);">CGV</a> | 
+                <a href="{% url 'legal:privacy' %}" style="color:rgba(255,255,255,0.6);">Confidentialité</a></p>
+            </div>
+        </div>
+    </footer>
 
-    // ── PANIER ──
-    function addToCart(id, name, price, image) {
-        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        const existing = cart.find(i => i.id === id);
-        if (existing) { existing.quantity += 1; }
-        else { cart.push({ id, name, price, image: image || '', quantity: 1 }); }
-        localStorage.setItem('cart', JSON.stringify(cart));
-        showNotification('✅ ' + name.substring(0, 25) + '... ajouté au panier !');
-        updateCartBadge();
-    }
-
-    function showNotification(msg) {
-        const n = document.getElementById('notification');
-        n.textContent = msg;
-        n.style.display = 'block';
-        clearTimeout(window._notifTimer);
-        window._notifTimer = setTimeout(() => { n.style.display = 'none'; }, 3000);
-    }
-
-    function updateCartBadge() {
-        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        const total = cart.reduce((s, i) => s + i.quantity, 0);
-        const badge = document.getElementById('cart-count');
-        if (badge) {
-            badge.textContent = total;
-            badge.style.display = total > 0 ? 'inline-block' : 'none';
-        }
-    }
-
-    updateCartBadge();
-</script>
+    {% include 'includes/chatbot.html' %}
 </body>
 </html>
