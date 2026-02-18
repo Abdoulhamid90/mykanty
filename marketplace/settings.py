@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'payments',
     'legal',
     'services',
+    'faq',
 ]
 
 MIDDLEWARE = [

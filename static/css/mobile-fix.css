@@ -1,0 +1,193 @@
+/* 
+FICHIER CSS RESPONSIVE GLOBAL
+Créez ce fichier dans : static/css/mobile-fix.css
+Puis ajoutez-le dans TOUS vos templates avec : <link rel="stylesheet" href="{% static 'css/mobile-fix.css' %}">
+*/
+
+/* ══════════════════════════════════════════════════
+   CORRECTIONS GLOBALES DÉBORDEMENT MOBILE
+   ══════════════════════════════════════════════════ */
+
+/* Empêcher le débordement horizontal */
+html {
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
+body {
+    overflow-x: hidden;
+    max-width: 100vw;
+    margin: 0;
+    padding: 0;
+}
+
+/* Tous les containers doivent respecter la largeur d'écran */
+* {
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+/* Images responsives */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Tableaux responsives */
+table {
+    width: 100%;
+    overflow-x: auto;
+    display: block;
+}
+
+/* Formulaires */
+input, textarea, select {
+    max-width: 100%;
+}
+
+/* ══════════════════════════════════════════════════
+   CORRECTIONS SPÉCIFIQUES MOBILE
+   ══════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+    
+    /* Container principal */
+    .container {
+        max-width: 100% !important;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+        overflow-x: hidden;
+    }
+    
+    /* Headers et sections larges */
+    .header, .hero, .footer, section {
+        max-width: 100vw !important;
+        overflow-x: hidden;
+    }
+    
+    /* Grilles qui débordent */
+    .cards-grid, .experts-grid, .products-grid, .features-grid, .stats-grid {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+        padding: 0 15px;
+    }
+    
+    /* Formulaires */
+    .form-card, .form-group {
+        max-width: 100%;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    /* Boutons larges */
+    .btn, button, .btn-submit {
+        width: 100% !important;
+        max-width: 100%;
+    }
+    
+    /* Navigation */
+    .navbar, .nav-links {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    /* Tables */
+    table {
+        font-size: 0.85rem;
+    }
+    
+    /* Textes longs */
+    h1 {
+        font-size: 1.8rem !important;
+        word-wrap: break-word;
+    }
+    
+    h2 {
+        font-size: 1.5rem !important;
+        word-wrap: break-word;
+    }
+    
+    /* Cards et conteneurs */
+    .card, .expert-card, .product-card {
+        margin: 0 !important;
+        width: 100% !important;
+    }
+    
+    /* Espacement */
+    section {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    /* Débordement de texte */
+    p, div, span {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    /* Hero sections */
+    .hero h1 {
+        font-size: 2rem !important;
+    }
+    
+    .hero p {
+        font-size: 1rem !important;
+    }
+    
+    /* Filtres */
+    .filters-bar, .filters-grid {
+        grid-template-columns: 1fr !important;
+        width: 100%;
+    }
+    
+    /* Dashboard */
+    .dashboard-header, .stats-grid, .content-grid {
+        grid-template-columns: 1fr !important;
+    }
+    
+    /* Footer */
+    .footer-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* ══════════════════════════════════════════════════
+   TRÈS PETITS ÉCRANS (< 400px)
+   ══════════════════════════════════════════════════ */
+
+@media (max-width: 400px) {
+    body {
+        font-size: 14px;
+    }
+    
+    h1 {
+        font-size: 1.5rem !important;
+    }
+    
+    h2 {
+        font-size: 1.2rem !important;
+    }
+    
+    .btn, button {
+        font-size: 0.9rem;
+        padding: 10px 15px;
+    }
+}
+
+/* ══════════════════════════════════════════════════
+   CORRECTIONS CHATBOT
+   ══════════════════════════════════════════════════ */
+
+@media (max-width: 480px) {
+    #chat-window {
+        width: calc(100vw - 16px) !important;
+        right: 8px !important;
+        bottom: 85px !important;
+        height: 470px !important;
+    }
+    
+    #chat-bubble {
+        bottom: 18px !important;
+        right: 12px !important;
+    }
+}

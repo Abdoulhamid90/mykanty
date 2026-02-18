@@ -194,74 +194,178 @@ STYLE:
 - Réponds en maximum 3-4 phrases courtes
 - Si tu ne sais pas, oriente vers le support: +228 93 33 78 02"""
 
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+from anthropic import Anthropic
+from django.conf import settings
+from faq.models import FAQ
+from difflib import SequenceMatcher
+import re
+
+def find_best_faq_match(user_message):
+    """
+    Trouve la meilleure FAQ correspondant au message de l'utilisateur
+    """
+    user_message_lower = user_message.lower().strip()
+    
+    # Récupérer toutes les FAQ actives
+    all_faqs = FAQ.objects.filter(is_active=True).select_related('category')
+    
+    best_match = None
+    best_score = 0.0
+    
+    for faq in all_faqs:
+        # Comparer avec la question
+        question_score = SequenceMatcher(
+            None, 
+            user_message_lower, 
+            faq.question.lower()
+        ).ratio()
+        
+        # Comparer avec les mots-clés
+        keywords_score = 0.0
+        if faq.keywords:
+            keywords = [k.strip().lower() for k in faq.keywords.split(',')]
+            matching_keywords = sum(1 for k in keywords if k in user_message_lower)
+            keywords_score = matching_keywords / len(keywords) if keywords else 0
+        
+        # Score final (pondéré)
+        final_score = (question_score * 0.7) + (keywords_score * 0.3)
+        
+        if final_score > best_score:
+            best_score = final_score
+            best_match = faq
+    
+    # Retourner seulement si le score est assez élevé (>= 30%)
+    if best_score >= 0.3:
+        return best_match, best_score
+    
+    return None, 0.0
+
+
+def build_faq_context():
+    """
+    Construit le contexte FAQ pour Claude
+    """
+    faqs = FAQ.objects.filter(is_active=True).select_related('category').order_by('category__order', 'order')
+    
+    faq_text = "BASE DE CONNAISSANCE MY KANTY (FAQ) :\n\n"
+    
+    current_category = None
+    for faq in faqs:
+        if faq.category != current_category:
+            current_category = faq.category
+            faq_text += f"\n{'='*60}\n"
+            faq_text += f"CATÉGORIE : {faq.category.display_name.upper()}\n"
+            faq_text += f"{'='*60}\n\n"
+        
+        faq_text += f"Q: {faq.question}\n"
+        faq_text += f"R: {faq.answer}\n\n"
+    
+    return faq_text
+
 
 @csrf_exempt
-def chatbot_api_view(request):
-    """
-    Endpoint sécurisé pour le chatbot Claude.
-    Exempt de CSRF car appelé depuis le frontend.
-    """
-    # Vérifier que c'est bien une requête POST
-    if request.method != 'POST':
-        return JsonResponse({'error': 'Méthode non autorisée'}, status=405)
-
+@require_http_methods(["POST"])
+def chatbot_api(request):
     try:
-        # Parser le corps de la requête
-        body = json.loads(request.body)
-        messages = body.get('messages', [])
-
-        if not messages:
-            return JsonResponse({'error': 'Messages manquants'}, status=400)
-
-        # Limiter l'historique à 10 messages pour économiser les tokens
-        if len(messages) > 10:
-            messages = messages[-10:]
-
-        # Récupérer la clé API depuis les variables d'environnement
-        api_key = config('ANTHROPIC_API_KEY', default='')
-
-        if not api_key:
+        data = json.loads(request.body)
+        user_message = data.get('message', '')
+        
+        if not user_message:
             return JsonResponse({
-                'reply': "Le chatbot est temporairement indisponible. Contactez-nous au +228 93 33 78 02 🙏"
+                'error': 'Message requis'
+            }, status=400)
+        
+        # 1. D'abord, essayer de trouver une FAQ correspondante
+        matched_faq, match_score = find_best_faq_match(user_message)
+        
+        # 2. Construire le contexte FAQ
+        faq_context = build_faq_context()
+        
+        # 3. Construire le prompt système
+        system_prompt = f"""Tu es l'assistant virtuel de My Kanty, la marketplace n°1 au Togo et au Niger.
+
+INFORMATIONS MY KANTY :
+- Site web : https://mykanty-production.up.railway.app
+- Pays : Togo 🇹🇬 et Niger 🇳🇪
+- Contact Togo : +228 93 33 78 02
+- Contact Niger : +227 92 53 44 35
+- Email : contact@mykanty.com
+
+MY KANTY PROPOSE :
+1. 🛒 MARKETPLACE PRODUITS
+   - 50+ produits dans 18 catégories
+   - Paiement sécurisé Escrow 3%
+   - Livraison Togo & Niger
+   - URL : /products/
+
+2. 👔 MARKETPLACE SERVICES
+   - Experts vérifiés (plombiers, électriciens, développeurs, etc.)
+   - 8 catégories professionnelles
+   - Abonnements : 5000, 15000, 30000 XOF/mois
+   - URL : /services/
+
+{faq_context}
+
+INSTRUCTIONS :
+- Réponds UNIQUEMENT en te basant sur la FAQ ci-dessus
+- Si la réponse est dans la FAQ, utilise-la EXACTEMENT
+- Si la question n'est PAS dans la FAQ, dis : "Je n'ai pas cette information dans ma base de données. Contactez notre support : 🇹🇬 +228 93 33 78 02 ou 🇳🇪 +227 92 53 44 35"
+- Sois concis, clair et amical
+- Utilise des emojis pour rendre la conversation agréable
+- Formate avec des sauts de ligne pour la lisibilité
+- Si on te demande un lien, donne l'URL complète
+"""
+        
+        # 4. Si match FAQ fort (>60%), répondre directement
+        if matched_faq and match_score > 0.6:
+            # Incrémenter les stats
+            matched_faq.increment_views()
+            
+            response_text = f"📚 {matched_faq.category.display_name}\n\n"
+            response_text += f"❓ {matched_faq.question}\n\n"
+            response_text += f"✅ {matched_faq.answer}\n\n"
+            response_text += "---\n💡 Autre question ? Je suis là pour vous aider !"
+            
+            return JsonResponse({
+                'response': response_text,
+                'matched_faq': True,
+                'faq_id': matched_faq.id,
+                'confidence': round(match_score * 100, 1)
             })
-
-        # Préparer la requête vers l'API Anthropic
-        payload = json.dumps({
-            'model': 'claude-haiku-4-5-20251001',
-            'max_tokens': 500,
-            'system': SYSTEM_PROMPT,
-            'messages': messages
-        }).encode('utf-8')
-
-        req = urllib.request.Request(
-            'https://api.anthropic.com/v1/messages',
-            data=payload,
-            headers={
-                'Content-Type': 'application/json',
-                'x-api-key': api_key,
-                'anthropic-version': '2023-06-01'
-            },
-            method='POST'
+        
+        # 5. Sinon, utiliser Claude avec le contexte FAQ
+        client = Anthropic(api_key=settings.ANTHROPIC_API_KEY)
+        
+        message = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=500,
+            system=system_prompt,
+            messages=[{
+                "role": "user",
+                "content": user_message
+            }]
         )
-
-        # Appeler l'API Anthropic
-        with urllib.request.urlopen(req, timeout=30) as response:
-            data = json.loads(response.read().decode('utf-8'))
-            reply = data['content'][0]['text']
-            return JsonResponse({'reply': reply})
-
-    except urllib.error.HTTPError as e:
-        error_body = e.read().decode('utf-8') if e.fp else ''
-        print(f"❌ CHATBOT API ERROR: {e.code} - {error_body}")
+        
+        bot_response = message.content[0].text
+        
+        # Log la conversation (optionnel)
+        # ChatbotLog.objects.create(
+        #     user_message=user_message,
+        #     bot_response=bot_response,
+        #     matched_faq=matched_faq
+        # )
+        
         return JsonResponse({
-            'reply': "Désolé, je rencontre un problème technique. Contactez-nous au +228 93 33 78 02 📞"
+            'response': bot_response,
+            'matched_faq': False,
+            'suggested_faq': matched_faq.id if matched_faq else None
         })
-    except json.JSONDecodeError:
-        return JsonResponse({
-            'reply': "Format de message invalide. Contactez-nous au +228 93 33 78 02 📞"
-        })
+        
     except Exception as e:
-        print(f"❌ CHATBOT ERROR: {str(e)}")
         return JsonResponse({
-            'reply': "Une erreur est survenue. Notre équipe est disponible au +228 93 33 78 02 🙏"
-        })
+            'error': f'Erreur: {str(e)}'
+        }, status=500)
