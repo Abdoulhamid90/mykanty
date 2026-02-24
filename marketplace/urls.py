@@ -3,6 +3,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from . import views
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -14,6 +15,7 @@ urlpatterns = [
     path('payments/', include('payments.urls')),
     path('legal/', include('legal.urls')),
     path('chatbot-api/', views.chatbot_api_view, name='chatbot-api'),
+    path('offline/', TemplateView.as_view(template_name='offline.html'), name='offline'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
   + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
